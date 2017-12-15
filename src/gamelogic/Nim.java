@@ -17,6 +17,11 @@ public class Nim {
     Player  m_player2 = null;
 
 
+    public class GameState {
+        public ArrayList<Pillar> pillars = new ArrayList<>();
+        public int numCoinsRemovedLastTurn = 0;
+    }
+
 
     public  Nim(Iterable<Pillar> pillars, Player player1, Player player2) throws Exception {
 
