@@ -14,6 +14,9 @@ public class Nim {
 
     int m_currentPlayer = 0;
 
+    boolean m_isGameOver = false;
+    Player  m_winningPlayer = null;
+
     Player  m_player1 = null;
     Player  m_player2 = null;
 
@@ -50,6 +53,14 @@ public class Nim {
         return m_gameState;
     }
 
+    public boolean isGameOver() {
+        return m_isGameOver;
+    }
+
+    public Player getWinningPlayer() {
+        return m_winningPlayer;
+    }
+
 
     public  static  boolean IsValidState(Iterable<Pillar> pillars ) {
 
@@ -79,6 +90,9 @@ public class Nim {
 
     public boolean  playMove(Move move) {
 
+        if(m_isGameOver)
+            return false;
+
         if(!m_gameState.isMovePossible(move))
             return false;
 
@@ -92,10 +106,20 @@ public class Nim {
         // remember this move
         m_moves.add(move);
 
+        // check for game over
+        if( m_gameState.getAllPossibleNewStates().size() < 1 ) {
+            m_isGameOver = true;
+            m_winningPlayer = this.getCurrentPlayer();
+        }
+
         // switch player
+        Player oldPlayer = this.getCurrentPlayer();
         m_currentPlayer = (m_currentPlayer + 1) % 2 ;
 
         System.out.println("move has been played: " + move + ", next player is " + this.getCurrentPlayer());
+        if(m_isGameOver) {
+            System.out.println("GAME OVER - WINNER IS " + oldPlayer);
+        }
 
         return true;
     }

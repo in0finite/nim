@@ -126,6 +126,11 @@ public class MainWindow extends JDialog {
 
                     // update UI
                     this.UpdateUI();
+
+                    if(this.nim.isGameOver()) {
+                        this.OnGameOver();
+                    }
+
                 } else {
                     // human player
                     // he will manually play his move
@@ -166,6 +171,31 @@ public class MainWindow extends JDialog {
         this.nim.playMove(new Move(pillarIndex, numCoinsToRemove));
 
         this.UpdateUI();
+
+        if(this.nim.isGameOver()) {
+            this.OnGameOver();
+        }
+
+    }
+
+    void OnGameOver() {
+
+        if(null == this.nim)
+            return;
+        if(!this.nim.isGameOver())
+            return;
+
+        // if only 1 player is human, display something like: you won / you lost
+        // otherwise just display winner name
+
+        if( (this.nim.getPlayer1().isAI() && !this.nim.getPlayer2().isAI())
+                || (this.nim.getPlayer2().isAI() && !this.nim.getPlayer1().isAI())
+                ) {
+            // only 1 player is human
+            this.ShowMessage("GAME OVER", this.nim.getWinningPlayer().isAI() ? "you lost" : "you won" );
+        } else {
+            this.ShowMessage("GAME OVER", "winner is " + this.nim.getWinningPlayer().getName());
+        }
 
     }
 
