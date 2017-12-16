@@ -7,7 +7,8 @@ import java.util.HashSet;
 public class Nim {
 
 
-    ArrayList<Pillar>   m_pillars = new ArrayList<>();
+    //ArrayList<Pillar>   m_pillars = new ArrayList<>();
+    GameState   m_gameState = new GameState();
 
     ArrayList<Move> m_moves = new ArrayList<>();
 
@@ -29,7 +30,7 @@ public class Nim {
                 throw new Exception("Invalid state of pillars");
         }
 
-        m_pillars.addAll( (Collection<Pillar>) pillars );
+        m_gameState.pillars.addAll( (Collection<Pillar>) pillars );
 
         m_player1 = player1;
         m_player2 = player2;
@@ -43,6 +44,10 @@ public class Nim {
 
     public Player getPlayer2() {
         return m_player2;
+    }
+
+    public GameState getGameState() {
+        return m_gameState;
     }
 
 
@@ -78,7 +83,7 @@ public class Nim {
             return false;
 
         // remove coins from pillar
-        Pillar p = m_pillars.get( move.getPillarIndex() );
+        Pillar p = m_gameState.pillars.get( move.getPillarIndex() );
         if(!p.removeCoins(move.getNumCoinsTaken()))
             return false;
 

@@ -5,16 +5,20 @@ import gamelogic.Pillar;
 import gamelogic.Player;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class MainWindow extends JDialog {
     private JPanel contentPane;
     private JButton newGameButton;
     private JLabel statusLabel;
     private JButton aboutButton;
+    private JPanel gamePanel;
 
     private gamelogic.Nim nim;
+    private Canvas canvas;
 
 
 
@@ -52,6 +56,16 @@ public class MainWindow extends JDialog {
             }
         });
 
+        // create canvas
+        this.canvas = new Canvas(this);
+        this.gamePanel.add(this.canvas, BorderLayout.CENTER);
+
+        // start timer
+        Timer timer = new Timer(2000, (evnt) -> OnTimerAction());
+        timer.setRepeats(true);
+        timer.start();
+
+
     }
 
     private void onOK() {
@@ -72,11 +86,31 @@ public class MainWindow extends JDialog {
     }
 
 
+    public Nim getNim() {
+        return nim;
+    }
+
+
     void HandleException(Exception ex) {
+
+        System.out.println(ex);
 
         // display message box
 
         JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.INFORMATION_MESSAGE);
+
+    }
+
+    void OnTimerAction() {
+
+        if(this.nim != null) {
+            // the game is on
+            // if AI is on the move, obtain a move from it, and play
+
+        //    this.nim.getCurrentPlayer();
+        }
+
+        System.out.println("timer tick " + new Date() + " " + Thread.currentThread());
 
     }
 
@@ -136,6 +170,7 @@ public class MainWindow extends JDialog {
     void OnNewGameStarted() {
 
         this.UpdateStatusLabel();
+        this.UpdateCanvas();
 
     }
 
@@ -156,6 +191,12 @@ public class MainWindow extends JDialog {
         }
 
         this.statusLabel.setText(str);
+
+    }
+
+    void UpdateCanvas() {
+
+        this.canvas.repaint();
 
     }
 
