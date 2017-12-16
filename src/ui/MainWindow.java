@@ -113,7 +113,7 @@ public class MainWindow extends JDialog {
 
         try {
 
-            if (this.nim != null) {
+            if (this.nim != null && !this.nim.isGameOver()) {
                 // the game is on
                 // if AI is on the move, obtain a move from it, and play
 
@@ -138,7 +138,7 @@ public class MainWindow extends JDialog {
 
             }
 
-            System.out.println("timer tick " + new Date() + " " + Thread.currentThread());
+            System.out.println("timer tick " + new Date());
 
         } catch (Exception ex) {
             this.HandleException(ex);
