@@ -13,6 +13,10 @@ public class Pillar {
         m_numCoins = numCoins;
     }
 
+    public Pillar(Pillar pillar) {
+        this(pillar.m_numCoins);
+    }
+
     public int getNumCoins() {
         return m_numCoins;
     }

@@ -105,7 +105,7 @@ public class NewGameDialog extends JDialog {
                 params.numCoinsPerPillar[i] = scanner.nextInt();
             }
         }
-        try(Scanner scanner = new Scanner(this.textFieldPillars.getText())) {
+        try(Scanner scanner = new Scanner(this.textFieldMaxTreeDepth.getText())) {
             params.maxTreeDepth = scanner.nextInt();
         }
 

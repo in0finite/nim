@@ -1,8 +1,6 @@
 package ui;
 
-import gamelogic.Nim;
-import gamelogic.Pillar;
-import gamelogic.Player;
+import gamelogic.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -103,14 +101,34 @@ public class MainWindow extends JDialog {
 
     void OnTimerAction() {
 
-        if(this.nim != null) {
-            // the game is on
-            // if AI is on the move, obtain a move from it, and play
+        try {
 
-        //    this.nim.getCurrentPlayer();
+            if (this.nim != null) {
+                // the game is on
+                // if AI is on the move, obtain a move from it, and play
+
+                Player player = this.nim.getCurrentPlayer();
+                if (player.isAI()) {
+                    Move move = player.getMoveStrategy().getNextMove(this.nim.getGameState());
+                    System.out.println("obtained move from AI: " + move);
+                    if(move != null)
+                        this.nim.playMove(move);
+
+                    // update UI
+                    this.UpdateStatusLabel();
+                    this.UpdateCanvas();
+                } else {
+                    // human player
+                    // he will manually play his move
+                }
+
+            }
+
+            System.out.println("timer tick " + new Date() + " " + Thread.currentThread());
+
+        } catch (Exception ex) {
+            this.HandleException(ex);
         }
-
-        System.out.println("timer tick " + new Date() + " " + Thread.currentThread());
 
     }
 
@@ -154,6 +172,13 @@ public class MainWindow extends JDialog {
                     player2 = new Player("AI 2", true);
                 }
 
+                // assign move strategies for AI players
+                // TODO: strategies must be obtained from UI
+                if(player1.isAI())
+                    player1.setMoveStrategy(new MinMaxMove(params.maxTreeDepth));
+                if(player2.isAI())
+                    player2.setMoveStrategy(new MinMaxMove(params.maxTreeDepth));
+
                 // start the game
                 this.nim = new Nim(pillars, player1, player2);
 
@@ -168,6 +193,8 @@ public class MainWindow extends JDialog {
     }
 
     void OnNewGameStarted() {
+
+        System.out.println("New game started");
 
         this.UpdateStatusLabel();
         this.UpdateCanvas();

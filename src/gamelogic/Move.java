@@ -18,5 +18,12 @@ public class Move {
         return numCoinsTaken;
     }
 
+    @Override
+    public String toString() {
+        return "Move{" +
+                "pillarIndex=" + pillarIndex +
+                ", numCoinsTaken=" + numCoinsTaken +
+                '}';
+    }
 
 }

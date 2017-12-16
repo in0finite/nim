@@ -79,7 +79,7 @@ public class Nim {
 
     public boolean  playMove(Move move) {
 
-        if(!this.isMovePossible(move))
+        if(!m_gameState.isMovePossible(move))
             return false;
 
         // remove coins from pillar
@@ -87,11 +87,15 @@ public class Nim {
         if(!p.removeCoins(move.getNumCoinsTaken()))
             return false;
 
+        m_gameState.numCoinsRemovedLastTurn = move.numCoinsTaken;
+
         // remember this move
         m_moves.add(move);
 
         // switch player
         m_currentPlayer = (m_currentPlayer + 1) % 2 ;
+
+        System.out.println("move has been played: " + move + ", next player is " + this.getCurrentPlayer());
 
         return true;
     }
@@ -107,13 +111,6 @@ public class Nim {
 //        return this.playMove(move);
 //
 //    }
-
-    public  boolean isMovePossible(Move move) {
-
-        // TODO: not finished
-
-        return false;
-    }
 
 
 
