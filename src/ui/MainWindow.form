@@ -46,6 +46,18 @@
               <text value="New game"/>
             </properties>
           </component>
+          <component id="72071" class="javax.swing.JButton" binding="optionsButton" default-binding="true">
+            <constraints/>
+            <properties>
+              <text value="Options"/>
+            </properties>
+          </component>
+          <component id="3b76a" class="javax.swing.JCheckBox" binding="pauseAICheckBox" default-binding="true">
+            <constraints/>
+            <properties>
+              <text value="pause AI"/>
+            </properties>
+          </component>
           <component id="f38e1" class="javax.swing.JButton" binding="aboutButton">
             <constraints/>
             <properties>

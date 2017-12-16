@@ -14,9 +14,12 @@ public class MainWindow extends JDialog {
     private JLabel statusLabel;
     private JButton aboutButton;
     private JPanel gamePanel;
+    private JCheckBox pauseAICheckBox;
+    private JButton optionsButton;
 
     private gamelogic.Nim nim;
     private Canvas canvas;
+    private boolean isAIPaused = false;
 
 
 
@@ -54,6 +57,20 @@ public class MainWindow extends JDialog {
             }
         });
 
+        pauseAICheckBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                OnPauseAICheckBoxAction();
+            }
+        });
+
+
+        this.OnAfterCtor();
+
+    }
+
+    private void OnAfterCtor() {
+
         // create canvas
         this.canvas = new Canvas(this);
         this.gamePanel.add(this.canvas, BorderLayout.CENTER);
@@ -65,7 +82,6 @@ public class MainWindow extends JDialog {
 
 
         this.UpdateUI();
-
 
     }
 
@@ -119,16 +135,21 @@ public class MainWindow extends JDialog {
 
                 Player player = this.nim.getCurrentPlayer();
                 if (player.isAI()) {
-                    Move move = player.getMoveStrategy().getNextMove(this.nim.getGameState());
-                    System.out.println("obtained move from AI: " + move);
-                    if(move != null)
-                        this.nim.playMove(move);
 
-                    // update UI
-                    this.UpdateUI();
+                    if(!this.isAIPaused) {
 
-                    if(this.nim.isGameOver()) {
-                        this.OnGameOver();
+                        Move move = player.getMoveStrategy().getNextMove(this.nim.getGameState());
+                        System.out.println("obtained move from AI: " + move);
+                        if (move != null)
+                            this.nim.playMove(move);
+
+                        // update UI
+                        this.UpdateUI();
+
+                        if (this.nim.isGameOver()) {
+                            this.OnGameOver();
+                        }
+
                     }
 
                 } else {
@@ -264,6 +285,12 @@ public class MainWindow extends JDialog {
         System.out.println("New game started");
 
         this.UpdateUI();
+
+    }
+
+    void OnPauseAICheckBoxAction() {
+
+        this.isAIPaused = this.pauseAICheckBox.isSelected() ;
 
     }
 
