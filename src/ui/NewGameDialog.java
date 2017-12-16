@@ -78,6 +78,7 @@ public class NewGameDialog extends JDialog {
     }
 
 
+    // TODO: add AI vs human
     public enum PlayersType {
         HumanVsAI,
         HumanVsHuman,

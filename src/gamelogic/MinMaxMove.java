@@ -48,7 +48,8 @@ public class MinMaxMove implements MoveStrategy {
         }
 
         // TODO: is this correct ?
-        return xorSum == 0 ? 1f : 0f ;
+        //return xorSum == 0 ? 1f : 0f ;
+        return xorSum;
     }
 
 
