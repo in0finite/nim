@@ -64,6 +64,9 @@ public class MainWindow extends JDialog {
         timer.start();
 
 
+        this.UpdateUI();
+
+
     }
 
     private void onOK() {
@@ -89,13 +92,20 @@ public class MainWindow extends JDialog {
     }
 
 
+    /// Displays message box.
+    void ShowMessage( String title, String text ) {
+
+        JOptionPane.showMessageDialog(this, text, title, JOptionPane.INFORMATION_MESSAGE);
+
+    }
+
     void HandleException(Exception ex) {
 
         System.out.println(ex);
 
         // display message box
 
-        JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.INFORMATION_MESSAGE);
+        this.ShowMessage("Error", ex.getMessage() );
 
     }
 
@@ -115,8 +125,7 @@ public class MainWindow extends JDialog {
                         this.nim.playMove(move);
 
                     // update UI
-                    this.UpdateStatusLabel();
-                    this.UpdateCanvas();
+                    this.UpdateUI();
                 } else {
                     // human player
                     // he will manually play his move
@@ -129,6 +138,34 @@ public class MainWindow extends JDialog {
         } catch (Exception ex) {
             this.HandleException(ex);
         }
+
+    }
+
+    void onClickOnCoin(int pillarIndex, int coinIndex) {
+
+        // human player trying to make a move
+
+        // check if it is his turn
+        // if yes, try to make a move
+
+        if(null == this.nim)
+            return;
+
+        if( this.nim.getCurrentPlayer().isAI() )
+            return;
+
+        // how many coins he wants to remove ?
+        int numCoinsToRemove = this.nim.getGameState().pillars.get(pillarIndex).getNumCoins() - coinIndex ;
+
+        if(!this.nim.getGameState().isMovePossible(pillarIndex, numCoinsToRemove)) {
+            // display message
+            this.ShowMessage("", "Invalid move");
+            return;
+        }
+
+        this.nim.playMove(new Move(pillarIndex, numCoinsToRemove));
+
+        this.UpdateUI();
 
     }
 
@@ -195,6 +232,12 @@ public class MainWindow extends JDialog {
     void OnNewGameStarted() {
 
         System.out.println("New game started");
+
+        this.UpdateUI();
+
+    }
+
+    void UpdateUI() {
 
         this.UpdateStatusLabel();
         this.UpdateCanvas();

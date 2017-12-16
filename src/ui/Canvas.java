@@ -5,6 +5,8 @@ import gamelogic.Pillar;
 import org.w3c.dom.css.Rect;
 
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
@@ -22,6 +24,48 @@ public class Canvas extends java.awt.Canvas {
 
     public Canvas(MainWindow mainWindow) {
         this.mainWindow = mainWindow;
+
+        this.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent mouseEvent) {
+                onMouseClicked(mouseEvent);
+            }
+
+            @Override
+            public void mouseMoved(MouseEvent mouseEvent) {
+
+            }
+        });
+
+    }
+
+
+    void onMouseClicked(MouseEvent mouseEvent) {
+
+        // find coin by position
+
+        Nim nim = this.mainWindow.getNim();
+        if(null == nim)
+            return;
+
+        for(int x=0; x < nim.getGameState().pillars.size(); x++) {
+
+            Pillar pillar = nim.getGameState().pillars.get(x);
+
+            for (int y = 0; y < pillar.getNumCoins(); y++) {
+
+                Rectangle rect = new Rectangle();
+                this.getCoinRectangle(x, y, rect);
+
+                if( rect.contains(mouseEvent.getPoint()) ) {
+                    // this coin is clicked
+                    this.mainWindow.onClickOnCoin(x, y);
+                    return;
+                }
+            }
+
+        }
+
     }
 
 
@@ -49,7 +93,6 @@ public class Canvas extends java.awt.Canvas {
         Nim nim = this.mainWindow.getNim();
         if(null == nim)
             return;
-
 
         for(int x=0; x < nim.getGameState().pillars.size(); x++) {
 
