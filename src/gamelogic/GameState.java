@@ -1,5 +1,6 @@
 package gamelogic;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 
 public class GameState {
@@ -124,11 +125,11 @@ public class GameState {
         return true;
     }
 
-    public ArrayList<GameState> getAllPossibleNewStates() {
+    public void getAllPossibleNewStates(ArrayDeque<GameState> queue) {
 
         GameState currentState = this;
 
-        ArrayList<GameState> newStates = new ArrayList<>();
+        //ArrayList<GameState> newStates = new ArrayList<>();
 
         int maxNumCoinsToRemove = currentState.numCoinsRemovedLastTurn * 2;
         if(0 == maxNumCoinsToRemove)
@@ -150,12 +151,18 @@ public class GameState {
                 // remove coins from this pillar
                 gameState.removeCoinsAtPillar(i, j);
 
-                newStates.add(gameState);
+                queue.addLast(gameState);
             }
         }
 
 
-        return newStates;
+        //return queue;
+    }
+
+    public int getNumPossibleMoves() {
+        ArrayDeque<GameState> queue = new ArrayDeque<>(16);
+        this.getAllPossibleNewStates(queue);
+        return queue.size();
     }
 
 

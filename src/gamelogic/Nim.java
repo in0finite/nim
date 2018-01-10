@@ -104,7 +104,7 @@ public class Nim {
         m_moves.add(move);
 
         // check for game over
-        if( m_gameState.getAllPossibleNewStates().size() < 1 ) {
+        if( m_gameState.getNumPossibleMoves() < 1 ) {
             m_isGameOver = true;
             m_winningPlayer = this.getCurrentPlayer();
         }

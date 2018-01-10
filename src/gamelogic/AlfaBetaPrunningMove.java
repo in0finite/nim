@@ -2,6 +2,7 @@ package gamelogic;
 
 import util.Pair;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 
 public class AlfaBetaPrunningMove extends MinMaxMove {
@@ -32,7 +33,9 @@ public class AlfaBetaPrunningMove extends MinMaxMove {
 
     public Pair<Float,GameState> alphabeta(GameState node, int depthLeft, float α, float β, boolean maximizingPlayer) {
 
-        ArrayList<GameState> allPossibleNewStates = node.getAllPossibleNewStates();
+        ArrayDeque<GameState> allPossibleNewStates = new ArrayDeque<>(16);
+        node.getAllPossibleNewStates(allPossibleNewStates);
+        //ArrayList<GameState> allPossibleNewStates = node.getAllPossibleNewStates();
 
         if( depthLeft == 0 || allPossibleNewStates.size() == 0) {
             // no more depth available, or this node has no children

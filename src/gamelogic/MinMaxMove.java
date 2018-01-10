@@ -2,12 +2,17 @@ package gamelogic;
 
 import util.Pair;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Deque;
+import java.util.Queue;
 
 public class MinMaxMove implements MoveStrategy {
 
     protected int maxDepth = 0;
     private int numCalls = 0;
+    private ArrayDeque<GameState> m_queue = new ArrayDeque<>(4096);
+
 
 
     public class NodeData {
@@ -26,6 +31,7 @@ public class MinMaxMove implements MoveStrategy {
 
 
         this.numCalls = 0;
+        m_queue.clear();
 
         Move move = null;
 
@@ -78,11 +84,16 @@ public class MinMaxMove implements MoveStrategy {
 
         this.numCalls++;
 
-        ArrayList<GameState> allPossibleNewStates = node.getAllPossibleNewStates();
+        //ArrayList<GameState> allPossibleNewStates = node.getAllPossibleNewStates();
+        int queueSizeBefore = m_queue.size();
+        node.getAllPossibleNewStates(m_queue);
+        int numPossibleStates = m_queue.size() - queueSizeBefore ;
 
-        if( depthLeft == 0 || allPossibleNewStates.size() == 0) {
+        if( depthLeft == 0 || numPossibleStates == 0) {
+            // first remove all added elements from queue
+            dequeueMultiple(m_queue, numPossibleStates);
             // no more depth available, or this node has no children
-            return new Pair<>( this.heuristicValue(node, depthLeft, allPossibleNewStates.size() > 0, maximizingPlayer), node );
+            return new Pair<>( this.heuristicValue(node, depthLeft, numPossibleStates > 0, maximizingPlayer), node );
         }
 
 
@@ -92,7 +103,8 @@ public class MinMaxMove implements MoveStrategy {
         if( maximizingPlayer ) {
             // looking for maximum value among children
             bestValue = Float.NEGATIVE_INFINITY;
-            for( GameState child : allPossibleNewStates ) {
+            for( int i=0; i < numPossibleStates ; i++ ) {
+                GameState child = m_queue.removeLast();
                 Pair<Float,GameState> pair = minimax(child, depthLeft - 1, false);
                 if(pair.firstValue > bestValue) {
                     bestValue = pair.firstValue;
@@ -103,7 +115,8 @@ public class MinMaxMove implements MoveStrategy {
         else {
             // looking for minimum value among children
             bestValue = Float.POSITIVE_INFINITY;
-            for( GameState child : allPossibleNewStates ) {
+            for( int i=0; i < numPossibleStates ; i++ ) {
+                GameState child = m_queue.removeLast();
                 Pair<Float, GameState> pair = minimax(child, depthLeft - 1, true);
                 if(pair.firstValue < bestValue) {
                     bestValue = pair.firstValue;
@@ -115,6 +128,12 @@ public class MinMaxMove implements MoveStrategy {
         return new Pair<>(bestValue, bestState);
     }
 
+
+    public static void dequeueMultiple( ArrayDeque<GameState> queue, int numTimesToDequeue ) {
+        for (int i = 0; i < numTimesToDequeue; i++) {
+            queue.removeLast();
+        }
+    }
 
 
 }
