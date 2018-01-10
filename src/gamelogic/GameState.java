@@ -4,14 +4,33 @@ import java.util.ArrayList;
 
 public class GameState {
 
-    public ArrayList<Pillar> pillars = new ArrayList<>();
+    private ArrayList<Pillar> pillars = null;
     public int numCoinsRemovedLastTurn = 0;
 
 
 
-//    public GameState(GameState other) {
-//
-//    }
+    public GameState() {
+
+        this.pillars = new ArrayList<>(4);
+
+    }
+
+    public GameState( Iterable<Integer> coinsPerPillar ) {
+
+        this.pillars = new ArrayList<>(4);
+        for (Integer numCoins : coinsPerPillar) {
+            this.pillars.add(new Pillar(numCoins));
+        }
+
+    }
+
+    public GameState(GameState other) {
+
+        this.pillars = new ArrayList<>(other.getNumPillars());
+        other.copyPillarsData(this);
+        this.numCoinsRemovedLastTurn = other.numCoinsRemovedLastTurn;
+
+    }
 
 
     public int getNumPillars() {
@@ -115,10 +134,8 @@ public class GameState {
                 if(!currentState.isMovePossible( i, j ))
                     continue;
 
-                GameState gameState = new GameState();
+                GameState gameState = new GameState(currentState);
                 gameState.numCoinsRemovedLastTurn = j;
-                // copy pillars
-                currentState.copyPillarsData(gameState);
                 // remove coins from this pillar
                 gameState.removeCoinsAtPillar(i, j);
 

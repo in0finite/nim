@@ -8,7 +8,7 @@ public class Nim {
 
 
     //ArrayList<Pillar>   m_pillars = new ArrayList<>();
-    GameState   m_gameState = new GameState();
+    GameState   m_gameState = null;
 
     ArrayList<Move> m_moves = new ArrayList<>();
 
@@ -33,9 +33,7 @@ public class Nim {
                 throw new Exception("Invalid state of pillars");
         }
 
-        for (Integer numCoins : coinsPerPillar) {
-            m_gameState.pillars.add(new Pillar(numCoins));
-        }
+        m_gameState = new GameState(coinsPerPillar);
 
         m_player1 = player1;
         m_player2 = player2;
