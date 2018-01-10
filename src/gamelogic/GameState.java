@@ -4,29 +4,36 @@ import java.util.ArrayList;
 
 public class GameState {
 
-    private ArrayList<Pillar> pillars = null;
+    private int[] m_pillars = null;
     public int numCoinsRemovedLastTurn = 0;
 
 
 
     public GameState() {
 
-        this.pillars = new ArrayList<>(4);
+        //this.m_pillars = new ArrayList<>(4);
+        //this.m_pillars = new int[4];
 
     }
 
     public GameState( Iterable<Integer> coinsPerPillar ) {
 
-        this.pillars = new ArrayList<>(4);
+        ArrayList<Integer> list = new ArrayList<>(4);
         for (Integer numCoins : coinsPerPillar) {
-            this.pillars.add(new Pillar(numCoins));
+            list.add(numCoins);
+        }
+
+        this.m_pillars = new int[list.size()];
+        for (int i = 0; i < list.size(); i++) {
+            this.m_pillars[i] = list.get(i);
         }
 
     }
 
     public GameState(GameState other) {
 
-        this.pillars = new ArrayList<>(other.getNumPillars());
+        //this.m_pillars = new ArrayList<>(other.getNumPillars());
+        this.m_pillars = new int[other.getNumPillars()];
         other.copyPillarsData(this);
         this.numCoinsRemovedLastTurn = other.numCoinsRemovedLastTurn;
 
@@ -34,28 +41,32 @@ public class GameState {
 
 
     public int getNumPillars() {
-        return this.pillars.size();
+        //return this.m_pillars.size();
+        return this.m_pillars.length;
     }
 
     public int getNumCoinsAtPillar( int pillarIndex ) {
-        return this.pillars.get(pillarIndex).getNumCoins();
+        //return this.m_pillars.get(pillarIndex).getNumCoins();
+        return this.m_pillars[pillarIndex];
     }
 
     void setNumCoinsAtPillar( int pillarIndex, int numCoins ) {
-        this.pillars.get(pillarIndex).m_numCoins = numCoins;
+        //this.m_pillars.get(pillarIndex).m_numCoins = numCoins;
+        this.m_pillars[pillarIndex] = numCoins;
     }
 
     void removeCoinsAtPillar( int pillarIndex, int numCoins ) {
-        this.pillars.get(pillarIndex).m_numCoins -= numCoins;
+        //this.m_pillars.get(pillarIndex).m_numCoins -= numCoins;
+        this.m_pillars[pillarIndex] -= numCoins;
     }
 
 
     public void copyPillarsData( GameState destination ) {
-        destination.pillars.clear();
-        destination.pillars.ensureCapacity(this.getNumPillars());
+        //destination.m_pillars.clear();
+        //destination.m_pillars.ensureCapacity(this.getNumPillars());
         for(int i=0; i < this.getNumPillars(); i++) {
-            destination.pillars.add(new Pillar(this.getNumCoinsAtPillar(i)));
-        //    destination.setNumCoinsAtPillar(i, this.getNumCoinsAtPillar(i));
+            //destination.m_pillars.add(new Pillar(this.getNumCoinsAtPillar(i)));
+            destination.setNumCoinsAtPillar(i, this.getNumCoinsAtPillar(i));
         }
     }
 
