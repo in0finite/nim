@@ -7,6 +7,7 @@ import java.util.ArrayList;
 public class MinMaxMove implements MoveStrategy {
 
     protected int maxDepth = 0;
+    private int numCalls = 0;
 
 
     public class NodeData {
@@ -24,6 +25,8 @@ public class MinMaxMove implements MoveStrategy {
     public Move getNextMove(GameState nimGameState) {
 
 
+        this.numCalls = 0;
+
         Move move = null;
 
         Pair<Float, GameState> pair = minimax(nimGameState, this.maxDepth, true);
@@ -31,6 +34,7 @@ public class MinMaxMove implements MoveStrategy {
             // found best state
             // figure out the move
             move = GameState.getMoveBetweenTwoStates(nimGameState, pair.secondValue);
+            System.out.println("heuristic value = " + pair.firstValue + ", num calls = " + this.numCalls);
         } else {
             System.out.println("Failed to find a move. Have I lost the game?");
         }
@@ -39,28 +43,46 @@ public class MinMaxMove implements MoveStrategy {
     }
 
 
-    public float heuristicValue(GameState node) {
+    public float heuristicValue(GameState node, int depthLeft, boolean hasChildren, boolean maximizingPlayer) {
+
+        if(node.pillars.size() < 1)
+            return 0f;
+
+        if(!hasChildren) {  // we have no move to play
+            if(maximizingPlayer)
+                return -Float.MAX_VALUE;
+            else
+                return Float.MAX_VALUE;
+        }
 
         // compute xor sum of number of coins per pillar
-        int xorSum = 0;
-        for(Pillar pillar : node.pillars) {
-            xorSum ^= pillar.getNumCoins();
+
+        int xorSum = node.pillars.get(0).getNumCoins();
+        for(int i=1; i < node.pillars.size(); i++) {
+            xorSum ^= node.pillars.get(i).getNumCoins();
         }
 
         // TODO: is this correct ?
+
         //return xorSum == 0 ? 1f : 0f ;
-        return xorSum;
+
+        if(maximizingPlayer)
+            return xorSum;
+
+        return -xorSum;
     }
 
 
     /// Performs minimax search. Returns pair of best node and it's heuristic value.
     public Pair<Float,GameState> minimax(GameState node, int depthLeft, boolean maximizingPlayer) {
 
+        this.numCalls++;
+
         ArrayList<GameState> allPossibleNewStates = node.getAllPossibleNewStates();
 
         if( depthLeft == 0 || allPossibleNewStates.size() == 0) {
             // no more depth available, or this node has no children
-            return new Pair<>( this.heuristicValue(node), node );
+            return new Pair<>( this.heuristicValue(node, depthLeft, allPossibleNewStates.size() > 0, maximizingPlayer), node );
         }
 
 

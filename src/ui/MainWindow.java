@@ -20,6 +20,7 @@ public class MainWindow extends JDialog {
     private gamelogic.Nim nim;
     private Canvas canvas;
     private boolean isAIPaused = false;
+    private Timer   timer = null;
 
 
 
@@ -76,9 +77,9 @@ public class MainWindow extends JDialog {
         this.gamePanel.add(this.canvas, BorderLayout.CENTER);
 
         // start timer
-        Timer timer = new Timer(2000, (evnt) -> OnTimerAction());
-        timer.setRepeats(true);
-        timer.start();
+        this.timer = new Timer(2000, (evnt) -> OnTimerAction());
+        this.timer.setRepeats(true);
+        this.timer.start();
 
 
         this.UpdateUI();
@@ -220,22 +221,38 @@ public class MainWindow extends JDialog {
 
     }
 
+    SettingsDialog OpenSettingsDialog() {
+
+        SettingsDialog dialog = new SettingsDialog();
+        dialog.pack();
+        dialog.setModal(true);
+        dialog.setVisible(true);
+
+        return dialog;
+    }
+
     void StartNewGame() {
 
-        // open new game dialog
+        // open settings dialog
         // if user pressed OK, read params
         // start new game
 
         try {
 
-            NewGameDialog dialog = new NewGameDialog();
-            dialog.pack();
-            dialog.setModal(true);
-            dialog.setVisible(true);
-
-            if (dialog.getResult() == NewGameDialog.Result.OK) {
+            SettingsDialog dialog = this.OpenSettingsDialog();
+            if(dialog.getResult() == SettingsDialog.Result.OK) {
                 // read params
-                NewGameDialog.Params params = dialog.getParams();
+                SettingsDialog.Params params = dialog.getParams();
+
+                // check if params are valid
+                if(params.numPillars > 10)
+                    throw new IllegalArgumentException("number of pillars can not be higher than 10");
+                int[] inputIntegers = new int[] { params.numPillars, params.timerInterval, params.maxTreeDepth1,
+                    params.maxTreeDepth2 };
+                for(int inputInteger : inputIntegers) {
+                    if(inputInteger <= 0)
+                        throw new IllegalArgumentException("invalid input");
+                }
 
                 // create pillars
                 ArrayList<Pillar> pillars = new ArrayList<>();
@@ -246,15 +263,15 @@ public class MainWindow extends JDialog {
 
                 // create players
                 Player player1 = null, player2 = null;
-                if (params.playersType == NewGameDialog.PlayersType.HumanVsAI.ordinal()) {
+                if (params.playersType == SettingsDialog.PlayersType.HumanVsAI.ordinal()) {
                     // 1 human and 1 AI
                     player1 = new Player(Player.getCurrentUserName(), false);
                     player2 = new Player("AI", true);
-                } else if (params.playersType == NewGameDialog.PlayersType.HumanVsHuman.ordinal()) {
+                } else if (params.playersType == SettingsDialog.PlayersType.HumanVsHuman.ordinal()) {
                     // 2 human players
                     player1 = new Player("Player 1", false);
                     player2 = new Player("Player 2", false);
-                } else if (params.playersType == NewGameDialog.PlayersType.AIVsAI.ordinal()) {
+                } else if (params.playersType == SettingsDialog.PlayersType.AIVsAI.ordinal()) {
                     // 2 AI players
                     player1 = new Player("AI 1", true);
                     player2 = new Player("AI 2", true);
@@ -263,12 +280,15 @@ public class MainWindow extends JDialog {
                 // assign move strategies for AI players
                 // TODO: strategies must be obtained from UI
                 if(player1.isAI())
-                    player1.setMoveStrategy(new MinMaxMove(params.maxTreeDepth));
+                    player1.setMoveStrategy(new MinMaxMove(params.maxTreeDepth1));
                 if(player2.isAI())
-                    player2.setMoveStrategy(new MinMaxMove(params.maxTreeDepth));
+                    player2.setMoveStrategy(new MinMaxMove(params.maxTreeDepth2));
 
                 // start the game
                 this.nim = new Nim(pillars, player1, player2);
+
+                // update timer interval
+                this.timer.setDelay(params.timerInterval);
 
                 this.OnNewGameStarted();
 

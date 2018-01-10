@@ -4,13 +4,15 @@ import javax.swing.*;
 import java.awt.event.*;
 import java.util.Scanner;
 
-public class NewGameDialog extends JDialog {
+public class SettingsDialog extends JDialog {
     private JPanel contentPane;
     private JButton buttonOK;
     private JButton buttonCancel;
     private JComboBox comboBoxPlayerTypes;
     private JTextField textFieldPillars;
-    private JTextField textFieldMaxTreeDepth;
+    private JTextField textFieldMaxTreeDepth1;
+    private JTextField textFieldMoveTime;
+    private JTextField textFieldMaxTreeDepth2;
 
 
     public enum Result {
@@ -22,7 +24,7 @@ public class NewGameDialog extends JDialog {
 
 
 
-    public NewGameDialog() {
+    public SettingsDialog() {
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
@@ -66,7 +68,7 @@ public class NewGameDialog extends JDialog {
     }
 
     public static void main(String[] args) {
-        NewGameDialog dialog = new NewGameDialog();
+        SettingsDialog dialog = new SettingsDialog();
         dialog.pack();
         dialog.setVisible(true);
         System.exit(0);
@@ -89,7 +91,9 @@ public class NewGameDialog extends JDialog {
         public int playersType = 0;
         public int numPillars = 0;
         public int[] numCoinsPerPillar = null;
-        public int maxTreeDepth = 1;
+        public int maxTreeDepth1 = 1;
+        public int maxTreeDepth2 = 1;
+        public int timerInterval = 2000;
     }
 
 
@@ -106,11 +110,19 @@ public class NewGameDialog extends JDialog {
                 params.numCoinsPerPillar[i] = scanner.nextInt();
             }
         }
-        try(Scanner scanner = new Scanner(this.textFieldMaxTreeDepth.getText())) {
-            params.maxTreeDepth = scanner.nextInt();
-        }
+        params.maxTreeDepth1 = readIntFromTextField(this.textFieldMaxTreeDepth1);
+        params.maxTreeDepth2 = readIntFromTextField(this.textFieldMaxTreeDepth2);
+        params.timerInterval = readIntFromTextField(this.textFieldMoveTime);
 
         return params;
+    }
+
+    public static int readIntFromTextField(JTextField textField) {
+
+        try(Scanner scanner = new Scanner(textField.getText())) {
+            return scanner.nextInt();
+        }
+
     }
 
 }

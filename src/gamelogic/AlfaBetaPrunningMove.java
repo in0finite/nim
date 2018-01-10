@@ -36,7 +36,7 @@ public class AlfaBetaPrunningMove extends MinMaxMove {
 
         if( depthLeft == 0 || allPossibleNewStates.size() == 0) {
             // no more depth available, or this node has no children
-            return new Pair<>(heuristicValue(node), node);
+            return new Pair<>(heuristicValue(node, depthLeft, allPossibleNewStates.size() > 0, maximizingPlayer), node);
         }
 
 

@@ -9,6 +9,18 @@ public class GameState {
 
 
 
+    public  int getNumPillarsWithCoins() {
+
+        int count = 0;
+        for(Pillar p : this.pillars) {
+            if(p.getNumCoins() > 0)
+                count++;
+        }
+
+        return count;
+    }
+
+
     public  boolean isMovePossible(Move move) {
 
         return this.isMovePossible(move.pillarIndex, move.numCoinsTaken);
