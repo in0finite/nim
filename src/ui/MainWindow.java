@@ -118,7 +118,7 @@ public class MainWindow extends JDialog {
 
     void HandleException(Exception ex) {
 
-        System.out.println(ex);
+        ex.printStackTrace();
 
         // display message box
 
@@ -231,6 +231,16 @@ public class MainWindow extends JDialog {
         return dialog;
     }
 
+    public static MoveStrategy getMoveStrategyFromEnum(SettingsDialog.AIStrategy aiStrategy, int maxTreeDepth) {
+
+        if(aiStrategy == SettingsDialog.AIStrategy.Minmax)
+            return new MinMaxMove(maxTreeDepth);
+        else if(aiStrategy == SettingsDialog.AIStrategy.AlphaBetaPrunning)
+            return new AlfaBetaPrunningMove(maxTreeDepth);
+
+        return null;
+    }
+
     void StartNewGame() {
 
         // open settings dialog
@@ -278,11 +288,12 @@ public class MainWindow extends JDialog {
                 }
 
                 // assign move strategies for AI players
-                // TODO: strategies must be obtained from UI
-                if(player1.isAI())
-                    player1.setMoveStrategy(new MinMaxMove(params.maxTreeDepth1));
-                if(player2.isAI())
-                    player2.setMoveStrategy(new MinMaxMove(params.maxTreeDepth2));
+                if(player1.isAI()) {
+                    player1.setMoveStrategy(getMoveStrategyFromEnum(params.aiStrategy1, params.maxTreeDepth1));
+                }
+                if(player2.isAI()) {
+                    player2.setMoveStrategy(getMoveStrategyFromEnum(params.aiStrategy2, params.maxTreeDepth2));
+                }
 
                 // start the game
                 this.nim = new Nim(pillars, player1, player2);

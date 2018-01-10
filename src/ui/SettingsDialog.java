@@ -13,6 +13,8 @@ public class SettingsDialog extends JDialog {
     private JTextField textFieldMaxTreeDepth1;
     private JTextField textFieldMoveTime;
     private JTextField textFieldMaxTreeDepth2;
+    private JComboBox comboBoxStrategy1;
+    private JComboBox comboBoxStrategy2;
 
 
     public enum Result {
@@ -87,6 +89,12 @@ public class SettingsDialog extends JDialog {
         AIVsAI
     }
 
+    public enum AIStrategy {
+        Minmax,
+        AlphaBetaPrunning,
+        Competitive
+    }
+
     public class Params {
         public int playersType = 0;
         public int numPillars = 0;
@@ -94,6 +102,8 @@ public class SettingsDialog extends JDialog {
         public int maxTreeDepth1 = 1;
         public int maxTreeDepth2 = 1;
         public int timerInterval = 2000;
+        public AIStrategy aiStrategy1 = AIStrategy.Minmax;
+        public AIStrategy aiStrategy2 = AIStrategy.Minmax;
     }
 
 
@@ -113,6 +123,8 @@ public class SettingsDialog extends JDialog {
         params.maxTreeDepth1 = readIntFromTextField(this.textFieldMaxTreeDepth1);
         params.maxTreeDepth2 = readIntFromTextField(this.textFieldMaxTreeDepth2);
         params.timerInterval = readIntFromTextField(this.textFieldMoveTime);
+        params.aiStrategy1 = AIStrategy.values()[ this.comboBoxStrategy1.getSelectedIndex() ];
+        params.aiStrategy2 = AIStrategy.values()[ this.comboBoxStrategy2.getSelectedIndex() ];
 
         return params;
     }
