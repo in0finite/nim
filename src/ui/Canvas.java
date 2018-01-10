@@ -48,11 +48,9 @@ public class Canvas extends java.awt.Canvas {
         if(null == nim)
             return;
 
-        for(int x=0; x < nim.getGameState().pillars.size(); x++) {
+        for(int x=0; x < nim.getGameState().getNumPillars(); x++) {
 
-            Pillar pillar = nim.getGameState().pillars.get(x);
-
-            for (int y = 0; y < pillar.getNumCoins(); y++) {
+            for (int y = 0; y < nim.getGameState().getNumCoinsAtPillar(x); y++) {
 
                 Rectangle rect = new Rectangle();
                 this.getCoinRectangle(x, y, rect);
@@ -94,11 +92,9 @@ public class Canvas extends java.awt.Canvas {
         if(null == nim)
             return;
 
-        for(int x=0; x < nim.getGameState().pillars.size(); x++) {
+        for(int x=0; x < nim.getGameState().getNumPillars(); x++) {
 
-            Pillar pillar = nim.getGameState().pillars.get(x);
-
-            for (int y = 0; y < pillar.getNumCoins(); y++) {
+            for (int y = 0; y < nim.getGameState().getNumCoinsAtPillar(x); y++) {
 
                 Rectangle rect = new Rectangle();
                 this.getCoinRectangle(x, y, rect);

@@ -182,7 +182,7 @@ public class MainWindow extends JDialog {
             return;
 
         // how many coins he wants to remove ?
-        int numCoinsToRemove = this.nim.getGameState().pillars.get(pillarIndex).getNumCoins() - coinIndex ;
+        int numCoinsToRemove = this.nim.getGameState().getNumCoinsAtPillar(pillarIndex) - coinIndex ;
 
         if(!this.nim.getGameState().isMovePossible(pillarIndex, numCoinsToRemove)) {
             // display message
@@ -265,10 +265,10 @@ public class MainWindow extends JDialog {
                 }
 
                 // create pillars
-                ArrayList<Pillar> pillars = new ArrayList<>();
+                ArrayList<Integer> pillars = new ArrayList<>();
                 for (int i = 0; i < params.numPillars; i++) {
-                    Pillar pillar = new Pillar(params.numCoinsPerPillar[i]);
-                    pillars.add(pillar);
+                    //Pillar pillar = new Pillar(params.numCoinsPerPillar[i]);
+                    pillars.add(params.numCoinsPerPillar[i]);
                 }
 
                 // create players

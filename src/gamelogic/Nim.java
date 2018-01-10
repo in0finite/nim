@@ -21,19 +21,21 @@ public class Nim {
     Player  m_player2 = null;
 
 
-    public  Nim(Iterable<Pillar> pillars, Player player1, Player player2) throws Exception {
+    public  Nim(Iterable<Integer> coinsPerPillar, Player player1, Player player2) throws Exception {
 
-        if(!IsValidState(pillars)) {
+        if(!IsValidState(coinsPerPillar)) {
             // can't start the game
             throw new Exception("Invalid state of pillars");
         }
 
-        for (Pillar pillar : pillars) {
-            if(pillar.getNumCoins() == 0)
+        for (Integer numCoins : coinsPerPillar) {
+            if(numCoins <= 0)
                 throw new Exception("Invalid state of pillars");
         }
 
-        m_gameState.pillars.addAll( (Collection<Pillar>) pillars );
+        for (Integer numCoins : coinsPerPillar) {
+            m_gameState.pillars.add(new Pillar(numCoins));
+        }
 
         m_player1 = player1;
         m_player2 = player2;
@@ -62,12 +64,11 @@ public class Nim {
     }
 
 
-    public  static  boolean IsValidState(Iterable<Pillar> pillars ) {
+    public  static  boolean IsValidState(Iterable<Integer> coinsPerPillar ) {
 
         HashSet<Integer> foundNumbers = new HashSet<Integer>();
 
-        for(Pillar p : pillars) {
-            Integer numCoins = p.getNumCoins();
+        for(Integer numCoins : coinsPerPillar) {
 
             if(foundNumbers.contains(numCoins))
                 return false;
@@ -97,9 +98,7 @@ public class Nim {
             return false;
 
         // remove coins from pillar
-        Pillar p = m_gameState.pillars.get( move.getPillarIndex() );
-        if(!p.removeCoins(move.getNumCoinsTaken()))
-            return false;
+        m_gameState.removeCoinsAtPillar( move.getPillarIndex(), move.getNumCoinsTaken() );
 
         m_gameState.numCoinsRemovedLastTurn = move.numCoinsTaken;
 

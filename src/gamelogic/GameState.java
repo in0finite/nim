@@ -9,11 +9,43 @@ public class GameState {
 
 
 
+//    public GameState(GameState other) {
+//
+//    }
+
+
+    public int getNumPillars() {
+        return this.pillars.size();
+    }
+
+    public int getNumCoinsAtPillar( int pillarIndex ) {
+        return this.pillars.get(pillarIndex).getNumCoins();
+    }
+
+    void setNumCoinsAtPillar( int pillarIndex, int numCoins ) {
+        this.pillars.get(pillarIndex).m_numCoins = numCoins;
+    }
+
+    void removeCoinsAtPillar( int pillarIndex, int numCoins ) {
+        this.pillars.get(pillarIndex).m_numCoins -= numCoins;
+    }
+
+
+    public void copyPillarsData( GameState destination ) {
+        destination.pillars.clear();
+        destination.pillars.ensureCapacity(this.getNumPillars());
+        for(int i=0; i < this.getNumPillars(); i++) {
+            destination.pillars.add(new Pillar(this.getNumCoinsAtPillar(i)));
+        //    destination.setNumCoinsAtPillar(i, this.getNumCoinsAtPillar(i));
+        }
+    }
+
+
     public  int getNumPillarsWithCoins() {
 
         int count = 0;
-        for(Pillar p : this.pillars) {
-            if(p.getNumCoins() > 0)
+        for(int i=0; i < this.getNumPillars(); i++) {
+            if(this.getNumCoinsAtPillar(i) > 0)
                 count++;
         }
 
@@ -38,9 +70,7 @@ public class GameState {
             return false;
         }
 
-        Pillar pillar = this.pillars.get(pillarIndexToRemoveFrom);
-
-        int newNumCoins = pillar.getNumCoins() - numCoinsToRemove;
+        int newNumCoins = this.getNumCoinsAtPillar(pillarIndexToRemoveFrom) - numCoinsToRemove;
 
         if(newNumCoins < 0)
             return false;
@@ -48,12 +78,12 @@ public class GameState {
 
         // check if any other pillar has this number of coins (except if number of coins is 0)
         if(newNumCoins != 0) {
-            for (int i = 0; i < this.pillars.size(); i++) {
+            for (int i = 0; i < this.getNumPillars(); i++) {
 
                 if (i == pillarIndexToRemoveFrom)
                     continue;
 
-                if (this.pillars.get(i).getNumCoins() == newNumCoins) {
+                if (this.getNumCoinsAtPillar(i) == newNumCoins) {
                     // this pillar will have the same number of coins
                     return false;
                 }
@@ -75,23 +105,22 @@ public class GameState {
             maxNumCoinsToRemove = Integer.MAX_VALUE;
 
 
-        for (int i = 0; i < currentState.pillars.size(); i++) {
+        for (int i = 0; i < currentState.getNumPillars(); i++) {
 
             // remove coins from this pillar and create new states
             // j => num coins removed
-            for (int j = 1; j <= maxNumCoinsToRemove && j <= currentState.pillars.get(i).getNumCoins(); j++) {
+            for (int j = 1; j <= maxNumCoinsToRemove && j <= currentState.getNumCoinsAtPillar(i) ; j++) {
 
                 // check if this move is possible
-                if(!this.isMovePossible( i, j ))
+                if(!currentState.isMovePossible( i, j ))
                     continue;
 
                 GameState gameState = new GameState();
                 gameState.numCoinsRemovedLastTurn = j;
                 // copy pillars
-                for(Pillar pillar : currentState.pillars)
-                    gameState.pillars.add(new Pillar(pillar));
+                currentState.copyPillarsData(gameState);
                 // remove coins from this pillar
-                gameState.pillars.get(i).removeCoins(j);
+                gameState.removeCoinsAtPillar(i, j);
 
                 newStates.add(gameState);
             }
@@ -104,10 +133,10 @@ public class GameState {
 
     public static Move getMoveBetweenTwoStates(GameState firstState, GameState secondState) {
 
-        for (int j = 0; j < secondState.pillars.size(); j++) {
-            if(secondState.pillars.get(j).getNumCoins() != firstState.pillars.get(j).getNumCoins()) {
+        for (int j = 0; j < secondState.getNumPillars(); j++) {
+            if(secondState.getNumCoinsAtPillar(j) != firstState.getNumCoinsAtPillar(j)) {
                 // coins have been removed from this pillar
-                return new Move( j, firstState.pillars.get(j).getNumCoins() - secondState.pillars.get(j).getNumCoins() );
+                return new Move( j, firstState.getNumCoinsAtPillar(j) - secondState.getNumCoinsAtPillar(j) );
             }
         }
 

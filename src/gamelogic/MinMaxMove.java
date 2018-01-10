@@ -45,7 +45,7 @@ public class MinMaxMove implements MoveStrategy {
 
     public float heuristicValue(GameState node, int depthLeft, boolean hasChildren, boolean maximizingPlayer) {
 
-        if(node.pillars.size() < 1)
+        if(node.getNumPillars() < 1)
             return 0f;
 
         if(!hasChildren) {  // we have no move to play
@@ -57,9 +57,9 @@ public class MinMaxMove implements MoveStrategy {
 
         // compute xor sum of number of coins per pillar
 
-        int xorSum = node.pillars.get(0).getNumCoins();
-        for(int i=1; i < node.pillars.size(); i++) {
-            xorSum ^= node.pillars.get(i).getNumCoins();
+        int xorSum = node.getNumCoinsAtPillar(0);
+        for(int i=1; i < node.getNumPillars(); i++) {
+            xorSum ^= node.getNumCoinsAtPillar(i);
         }
 
         // TODO: is this correct ?
