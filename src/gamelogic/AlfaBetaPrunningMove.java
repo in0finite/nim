@@ -23,22 +23,10 @@ public class AlfaBetaPrunningMove extends MinMaxMove {
 
     void alphabeta(GameState node, int depthLeft, float α, float β, boolean maximizingPlayer) {
 
-        this.numCalls++;
+        if(minimaxStart(node, depthLeft, maximizingPlayer))
+            return;
 
-        //ArrayList<GameState> allPossibleNewStates = node.getAllPossibleNewStates();
-        int queueSizeBefore = m_queue.size();
-        node.getAllPossibleNewStates(m_queue);
-        int numPossibleStates = m_queue.size() - queueSizeBefore ;
-
-        if( depthLeft == 0 || numPossibleStates == 0) {
-            // first remove all added elements from queue
-            dequeueMultiple(m_queue, numPossibleStates);
-            // no more depth available, or this node has no children
-            //    return new Pair<>( this.heuristicValue(node, depthLeft, numPossibleStates > 0, maximizingPlayer), node );
-            m_resultHeuristicValue = this.heuristicValue(node, depthLeft, numPossibleStates > 0, maximizingPlayer);
-            m_resultNode = node;
-            return ;
-        }
+        int numPossibleStates = m_numPossibleStates;
 
 
         float bestValue = maximizingPlayer ? Float.NEGATIVE_INFINITY : Float.POSITIVE_INFINITY;

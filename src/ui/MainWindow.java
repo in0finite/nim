@@ -236,8 +236,10 @@ public class MainWindow extends JDialog {
             return new MinMaxMove(maxTreeDepth);
         else if(aiStrategy == SettingsDialog.AIStrategy.AlphaBetaPrunning)
             return new AlfaBetaPrunningMove(maxTreeDepth);
+        else if(aiStrategy == SettingsDialog.AIStrategy.Competitive)
+            return new CompetitiveMove(maxTreeDepth);
 
-        return null;
+        throw new IllegalArgumentException("no such AI strategy available");
     }
 
     void StartNewGame() {

@@ -2,6 +2,8 @@ package gamelogic;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Objects;
 
 public class GameState {
 
@@ -69,6 +71,34 @@ public class GameState {
             //destination.m_pillars.add(new Pillar(this.getNumCoinsAtPillar(i)));
             destination.setNumCoinsAtPillar(i, this.getNumCoinsAtPillar(i));
         }
+    }
+
+
+    @Override
+    public final boolean equals(Object o) {
+        if (this == o) return true;
+        //if (o == null || getClass() != o.getClass()) return false;
+        GameState gameState = (GameState) o;
+
+        if(this.numCoinsRemovedLastTurn != gameState.numCoinsRemovedLastTurn)
+            return false;
+        if(this.m_pillars.length != gameState.m_pillars.length)
+            return false;
+        int length = this.m_pillars.length;
+        for(int i=0; i < length; i++) {
+            if(this.m_pillars[i] != gameState.m_pillars[i])
+                return false;
+        }
+
+        return true;
+    }
+
+    @Override
+    public final int hashCode() {
+
+        int result = Integer.hashCode( numCoinsRemovedLastTurn );
+        result = 31 * result + Arrays.hashCode(m_pillars);
+        return result;
     }
 
 

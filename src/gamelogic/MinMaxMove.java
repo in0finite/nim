@@ -14,6 +14,7 @@ public class MinMaxMove implements MoveStrategy {
     protected ArrayDeque<GameState> m_queue = new ArrayDeque<>(4096);
     protected float m_resultHeuristicValue = 0f;
     protected GameState m_resultNode = null;
+    protected int m_numPossibleStates = 0;
 
 
 
@@ -96,23 +97,10 @@ public class MinMaxMove implements MoveStrategy {
     /// Performs minimax search. Returns pair of best node and it's heuristic value.
     void minimax(GameState node, int depthLeft, boolean maximizingPlayer) {
 
-        this.numCalls++;
+        if(minimaxStart(node, depthLeft, maximizingPlayer))
+            return;
 
-        //ArrayList<GameState> allPossibleNewStates = node.getAllPossibleNewStates();
-        int queueSizeBefore = m_queue.size();
-        node.getAllPossibleNewStates(m_queue);
-        int numPossibleStates = m_queue.size() - queueSizeBefore ;
-
-        if( depthLeft == 0 || numPossibleStates == 0) {
-            // first remove all added elements from queue
-            dequeueMultiple(m_queue, numPossibleStates);
-            // no more depth available, or this node has no children
-        //    return new Pair<>( this.heuristicValue(node, depthLeft, numPossibleStates > 0, maximizingPlayer), node );
-            m_resultHeuristicValue = this.heuristicValue(node, depthLeft, numPossibleStates > 0, maximizingPlayer);
-            m_resultNode = node;
-            return ;
-        }
-
+        int numPossibleStates = m_numPossibleStates;
 
         float bestValue = maximizingPlayer ? Float.NEGATIVE_INFINITY : Float.POSITIVE_INFINITY;
         GameState bestState = node;
@@ -137,6 +125,29 @@ public class MinMaxMove implements MoveStrategy {
     //    return new Pair<>(bestValue, bestState);
         m_resultHeuristicValue = bestValue;
         m_resultNode = bestState;
+    }
+
+
+    protected final boolean minimaxStart( GameState node, int depthLeft, boolean maximizingPlayer ) {
+
+        this.numCalls++;
+
+        //ArrayList<GameState> allPossibleNewStates = node.getAllPossibleNewStates();
+        int queueSizeBefore = m_queue.size();
+        node.getAllPossibleNewStates(m_queue);
+        m_numPossibleStates = m_queue.size() - queueSizeBefore ;
+
+        if( depthLeft == 0 || m_numPossibleStates == 0) {
+            // first remove all added elements from queue
+            dequeueMultiple(m_queue, m_numPossibleStates);
+            // no more depth available, or this node has no children
+            //    return new Pair<>( this.heuristicValue(node, depthLeft, numPossibleStates > 0, maximizingPlayer), node );
+            m_resultHeuristicValue = this.heuristicValue(node, depthLeft, m_numPossibleStates > 0, maximizingPlayer);
+            m_resultNode = node;
+            return true;
+        }
+
+        return false;
     }
 
 
