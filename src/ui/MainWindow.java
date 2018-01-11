@@ -122,7 +122,7 @@ public class MainWindow extends JDialog {
 
         // display message box
 
-        this.ShowMessage("Error", ex.getMessage() );
+        this.ShowMessage("Error: " + ex.getClass().getName(), ex.getMessage() );
 
     }
 
@@ -140,7 +140,7 @@ public class MainWindow extends JDialog {
                     if(!this.isAIPaused) {
 
                         Move move = player.getMoveStrategy().getNextMove(this.nim.getGameState());
-                        System.out.println("obtained move from AI: " + move);
+                    //    System.out.println("obtained move from AI: " + move);
                         if (move != null)
                             this.nim.playMove(move);
 
@@ -160,7 +160,7 @@ public class MainWindow extends JDialog {
 
             }
 
-            System.out.println("timer tick " + new Date());
+        //    System.out.println("timer tick " + new Date());
 
         } catch (Exception ex) {
             this.HandleException(ex);

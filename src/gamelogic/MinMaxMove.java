@@ -31,21 +31,24 @@ public class MinMaxMove implements MoveStrategy {
     @Override
     public Move getNextMove(GameState nimGameState) {
 
+        long timeAtStart = System.currentTimeMillis();
 
         this.numCalls = 0;
         m_queue.clear();
         m_resultHeuristicValue = 0f;
         m_resultNode = null;
 
-        Move move = null;
 
         this.getNextMoveInternal(nimGameState);
 
+        long timeElapsedMs = System.currentTimeMillis() - timeAtStart;
+
+        Move move = null;
         if(m_resultNode != nimGameState) {
             // found best state
             // figure out the move
             move = GameState.getMoveBetweenTwoStates(nimGameState, m_resultNode);
-            System.out.println("heuristic value = " + m_resultHeuristicValue + ", num calls = " + this.numCalls);
+            System.out.println("heuristic value = " + m_resultHeuristicValue + ", num calls = " + this.numCalls + ", time = " + timeElapsedMs + " ms");
         } else {
             System.out.println("Failed to find a move. Have I lost the game?");
         }
