@@ -14,65 +14,71 @@ public class AlfaBetaPrunningMove extends MinMaxMove {
 
 
     @Override
-    public Move getNextMove(GameState nimGameState) {
+    protected void getNextMoveInternal(GameState nimGameState) {
 
-        Move move = null;
+        alphabeta(nimGameState, this.maxDepth, Float.NEGATIVE_INFINITY, Float.POSITIVE_INFINITY, true);
 
-        Pair<Float,GameState> pair = alphabeta(nimGameState, this.maxDepth, Float.NEGATIVE_INFINITY, Float.POSITIVE_INFINITY, true);
-        if(pair.secondValue != nimGameState) {
-            // found best state
-            // figure out the move
-            move = GameState.getMoveBetweenTwoStates(nimGameState, pair.secondValue);
-        } else {
-            System.out.println("Failed to find a move. Have I lost the game?");
-        }
-
-        return move;
     }
 
 
-    public Pair<Float,GameState> alphabeta(GameState node, int depthLeft, float α, float β, boolean maximizingPlayer) {
+    void alphabeta(GameState node, int depthLeft, float α, float β, boolean maximizingPlayer) {
 
-        ArrayDeque<GameState> allPossibleNewStates = new ArrayDeque<>(16);
-        node.getAllPossibleNewStates(allPossibleNewStates);
+        this.numCalls++;
+
         //ArrayList<GameState> allPossibleNewStates = node.getAllPossibleNewStates();
+        int queueSizeBefore = m_queue.size();
+        node.getAllPossibleNewStates(m_queue);
+        int numPossibleStates = m_queue.size() - queueSizeBefore ;
 
-        if( depthLeft == 0 || allPossibleNewStates.size() == 0) {
+        if( depthLeft == 0 || numPossibleStates == 0) {
+            // first remove all added elements from queue
+            dequeueMultiple(m_queue, numPossibleStates);
             // no more depth available, or this node has no children
-            return new Pair<>(heuristicValue(node, depthLeft, allPossibleNewStates.size() > 0, maximizingPlayer), node);
+            //    return new Pair<>( this.heuristicValue(node, depthLeft, numPossibleStates > 0, maximizingPlayer), node );
+            m_resultHeuristicValue = this.heuristicValue(node, depthLeft, numPossibleStates > 0, maximizingPlayer);
+            m_resultNode = node;
+            return ;
         }
 
 
-        float bestValue ;
+        float bestValue = maximizingPlayer ? Float.NEGATIVE_INFINITY : Float.POSITIVE_INFINITY;
         GameState bestState = node;
 
-        if(maximizingPlayer) {
-            bestValue = Float.NEGATIVE_INFINITY;
-            for( GameState child : allPossibleNewStates ) {
-                Pair<Float, GameState> pair = alphabeta(child, depthLeft - 1, α, β, false);
-                if(pair.firstValue > bestValue) {
-                    bestValue = pair.firstValue;
+        int numElementsLeftToRemove = numPossibleStates;
+
+        for( int i=0; i < numPossibleStates; i++ ) {
+            GameState child = m_queue.removeLast();
+            numElementsLeftToRemove --;
+
+            alphabeta(child, depthLeft - 1, α, β, !maximizingPlayer);
+
+            if(maximizingPlayer) {
+                if (m_resultHeuristicValue > bestValue) {
+                    bestValue = m_resultHeuristicValue;
                     bestState = child;
                 }
                 α = Math.max(α, bestValue);
-                if( β <= α )
+                if (β <= α)
                     break; // β cut-off
-            }
-        } else {
-            bestValue = Float.POSITIVE_INFINITY;
-            for( GameState child : allPossibleNewStates ) {
-                Pair<Float, GameState> pair = alphabeta(child, depthLeft - 1, α, β, true);
-                if(pair.firstValue < bestValue) {
-                    bestValue = pair.firstValue;
+            } else {
+                if(m_resultHeuristicValue < bestValue) {
+                    bestValue = m_resultHeuristicValue;
                     bestState = child;
                 }
                 β = Math.min(β, bestValue);
                 if( β <= α )
                     break; // α cut-off
             }
+
         }
 
-        return new Pair<>(bestValue, bestState);
+        // remove the rest of elements from queue - because we may have exited from loop using break
+        dequeueMultiple(m_queue, numElementsLeftToRemove);
+
+
+    //    return new Pair<>(bestValue, bestState);
+        m_resultHeuristicValue = bestValue;
+        m_resultNode = bestState;
     }
 
 

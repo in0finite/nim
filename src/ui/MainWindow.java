@@ -15,7 +15,6 @@ public class MainWindow extends JDialog {
     private JButton aboutButton;
     private JPanel gamePanel;
     private JCheckBox pauseAICheckBox;
-    private JButton optionsButton;
 
     private gamelogic.Nim nim;
     private Canvas canvas;

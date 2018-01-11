@@ -10,8 +10,8 @@ import java.util.Queue;
 public class MinMaxMove implements MoveStrategy {
 
     protected int maxDepth = 0;
-    private int numCalls = 0;
-    private ArrayDeque<GameState> m_queue = new ArrayDeque<>(4096);
+    protected int numCalls = 0;
+    protected ArrayDeque<GameState> m_queue = new ArrayDeque<>(4096);
     protected float m_resultHeuristicValue = 0f;
     protected GameState m_resultNode = null;
 

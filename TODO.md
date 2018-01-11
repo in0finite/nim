@@ -1,6 +1,5 @@
 
-- remove options button
-- alpha-beta prunning
+- don't destroy settings dialog when it is closed
 - competitive AI player
 - can gui forms run in NetBeans or Eclipse ?
 
