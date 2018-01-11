@@ -12,6 +12,8 @@ public class MinMaxMove implements MoveStrategy {
     protected int maxDepth = 0;
     private int numCalls = 0;
     private ArrayDeque<GameState> m_queue = new ArrayDeque<>(4096);
+    protected float m_resultHeuristicValue = 0f;
+    protected GameState m_resultNode = null;
 
 
 
@@ -32,20 +34,29 @@ public class MinMaxMove implements MoveStrategy {
 
         this.numCalls = 0;
         m_queue.clear();
+        m_resultHeuristicValue = 0f;
+        m_resultNode = null;
 
         Move move = null;
 
-        Pair<Float, GameState> pair = minimax(nimGameState, this.maxDepth, true);
-        if(pair.secondValue != nimGameState) {
+        this.getNextMoveInternal(nimGameState);
+
+        if(m_resultNode != nimGameState) {
             // found best state
             // figure out the move
-            move = GameState.getMoveBetweenTwoStates(nimGameState, pair.secondValue);
-            System.out.println("heuristic value = " + pair.firstValue + ", num calls = " + this.numCalls);
+            move = GameState.getMoveBetweenTwoStates(nimGameState, m_resultNode);
+            System.out.println("heuristic value = " + m_resultHeuristicValue + ", num calls = " + this.numCalls);
         } else {
             System.out.println("Failed to find a move. Have I lost the game?");
         }
 
         return move;
+    }
+
+    protected void getNextMoveInternal(GameState nimGameState) {
+
+        minimax(nimGameState, this.maxDepth, true);
+
     }
 
 
@@ -80,7 +91,7 @@ public class MinMaxMove implements MoveStrategy {
 
 
     /// Performs minimax search. Returns pair of best node and it's heuristic value.
-    public Pair<Float,GameState> minimax(GameState node, int depthLeft, boolean maximizingPlayer) {
+    void minimax(GameState node, int depthLeft, boolean maximizingPlayer) {
 
         this.numCalls++;
 
@@ -93,39 +104,36 @@ public class MinMaxMove implements MoveStrategy {
             // first remove all added elements from queue
             dequeueMultiple(m_queue, numPossibleStates);
             // no more depth available, or this node has no children
-            return new Pair<>( this.heuristicValue(node, depthLeft, numPossibleStates > 0, maximizingPlayer), node );
+        //    return new Pair<>( this.heuristicValue(node, depthLeft, numPossibleStates > 0, maximizingPlayer), node );
+            m_resultHeuristicValue = this.heuristicValue(node, depthLeft, numPossibleStates > 0, maximizingPlayer);
+            m_resultNode = node;
+            return ;
         }
 
 
-        float bestValue ;
+        float bestValue = maximizingPlayer ? Float.NEGATIVE_INFINITY : Float.POSITIVE_INFINITY;
         GameState bestState = node;
 
-        if( maximizingPlayer ) {
-            // looking for maximum value among children
-            bestValue = Float.NEGATIVE_INFINITY;
-            for( int i=0; i < numPossibleStates ; i++ ) {
-                GameState child = m_queue.removeLast();
-                Pair<Float,GameState> pair = minimax(child, depthLeft - 1, false);
-                if(pair.firstValue > bestValue) {
-                    bestValue = pair.firstValue;
+        // look for best value among children
+        for( int i=0; i < numPossibleStates ; i++ ) {
+            GameState child = m_queue.removeLast();
+            minimax(child, depthLeft - 1, !maximizingPlayer);
+            if( maximizingPlayer ) {
+                if (m_resultHeuristicValue > bestValue) {
+                    bestValue = m_resultHeuristicValue;
                     bestState = child;
                 }
-            }
-        }
-        else {
-            // looking for minimum value among children
-            bestValue = Float.POSITIVE_INFINITY;
-            for( int i=0; i < numPossibleStates ; i++ ) {
-                GameState child = m_queue.removeLast();
-                Pair<Float, GameState> pair = minimax(child, depthLeft - 1, true);
-                if(pair.firstValue < bestValue) {
-                    bestValue = pair.firstValue;
+            } else {
+                if(m_resultHeuristicValue < bestValue) {
+                    bestValue = m_resultHeuristicValue;
                     bestState = child;
                 }
             }
         }
 
-        return new Pair<>(bestValue, bestState);
+    //    return new Pair<>(bestValue, bestState);
+        m_resultHeuristicValue = bestValue;
+        m_resultNode = bestState;
     }
 
 
