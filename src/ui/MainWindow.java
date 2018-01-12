@@ -360,7 +360,7 @@ public class MainWindow extends JDialog {
 
     void OpenAboutDialog() {
 
-        String str = "Nim\n\nminmax tree game (or something like that, I don't know :D)\n\nbuilt by in0finite => github.com/in0finite" +
+        String str = "Nim\n\nminmax tree game\n\nbuilt by in0finite => github.com/in0finite" +
                 "\n\nLicense: MIT";
 
         JOptionPane.showMessageDialog(this, str,
