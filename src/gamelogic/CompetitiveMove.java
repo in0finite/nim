@@ -20,7 +20,7 @@ public class CompetitiveMove extends AlfaBetaPrunningMove {
     }
 
 
-    private HashMap<GameState, Pair<Float, Integer>> m_visitedStates = new HashMap<GameState, Pair<Float, Integer>>(16 * 1024 * 1024 * 1024);
+    private HashMap<GameState, Pair<Float, Integer>> m_visitedStates = new HashMap<GameState, Pair<Float, Integer>>(4 * 1024 * 1024);
     private int m_numStatesEliminated = 0;
 
 
