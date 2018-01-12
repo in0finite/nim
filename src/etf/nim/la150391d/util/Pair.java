@@ -1,4 +1,4 @@
-package util;
+package etf.nim.la150391d.util;
 
 /**
  * Contains 2 values inside.

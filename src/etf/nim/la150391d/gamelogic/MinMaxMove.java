@@ -1,11 +1,6 @@
-package gamelogic;
-
-import util.Pair;
+package etf.nim.la150391d.gamelogic;
 
 import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Deque;
-import java.util.Queue;
 
 /**
  * Finds the next move by using minmax tree.

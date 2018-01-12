@@ -1,4 +1,4 @@
-package ui;
+package etf.nim.la150391d.ui;
 
 import javax.swing.*;
 import java.awt.*;

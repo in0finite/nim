@@ -1,9 +1,8 @@
-package gamelogic;
+package etf.nim.la150391d.gamelogic;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Objects;
 
 /**
  * Class which contains game state.

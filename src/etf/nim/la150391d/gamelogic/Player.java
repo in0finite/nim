@@ -1,4 +1,4 @@
-package gamelogic;
+package etf.nim.la150391d.gamelogic;
 
 /**
  * Participates in a game.

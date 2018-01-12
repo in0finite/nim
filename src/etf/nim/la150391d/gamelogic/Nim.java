@@ -1,7 +1,6 @@
-package gamelogic;
+package etf.nim.la150391d.gamelogic;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
 
 /**

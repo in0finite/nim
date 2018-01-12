@@ -1,6 +1,6 @@
-package gamelogic;
+package etf.nim.la150391d.gamelogic;
 
-import util.Pair;
+import etf.nim.la150391d.util.Pair;
 
 import java.util.HashMap;
 

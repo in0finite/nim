@@ -1,6 +1,6 @@
-package ui;
+package etf.nim.la150391d.ui;
 
-import gamelogic.Nim;
+import etf.nim.la150391d.gamelogic.Nim;
 
 import java.awt.*;
 import java.awt.event.MouseAdapter;

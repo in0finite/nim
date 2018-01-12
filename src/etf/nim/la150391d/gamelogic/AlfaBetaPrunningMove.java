@@ -1,9 +1,4 @@
-package gamelogic;
-
-import util.Pair;
-
-import java.util.ArrayDeque;
-import java.util.ArrayList;
+package etf.nim.la150391d.gamelogic;
 
 /**
  * Computes the move using alpha-beta prunning.

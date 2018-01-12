@@ -1,4 +1,4 @@
-package gamelogic;
+package etf.nim.la150391d.gamelogic;
 
 /**
  * Interface which should be inherited by AIs, and is used to compute the next move.

@@ -1,12 +1,11 @@
-package ui;
+package etf.nim.la150391d.ui;
 
-import gamelogic.*;
+import etf.nim.la150391d.gamelogic.*;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
-import java.util.Date;
 
 /**
  * The main class in the program. It creates main window, and has all the responsibilities for starting new game,
