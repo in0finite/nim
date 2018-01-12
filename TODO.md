@@ -1,8 +1,8 @@
 
 - try to run project in NetBeans or Eclipse
-- human player could not make a valid move !
-- minmax and alphabeta don't work - they use the opposite moves
+- generate pdf documentation
 
-- don't destroy settings dialog when it is closed
+## OPTIONAL
+- don't destroy settings dialog when it is closed ?
 - highlight last taken coins, for some time ?
 

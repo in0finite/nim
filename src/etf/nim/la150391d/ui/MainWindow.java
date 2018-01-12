@@ -197,7 +197,7 @@ public class MainWindow extends JDialog {
 
         if (!this.nim.getGameState().isMovePossible(pillarIndex, numCoinsToRemove)) {
             // display message
-            this.ShowMessage("", "Invalid move");
+            this.ShowMessage("", "Invalid move: " + new Move(pillarIndex, numCoinsToRemove));
             return;
         }
 
@@ -242,6 +242,7 @@ public class MainWindow extends JDialog {
 
         SettingsDialog dialog = new SettingsDialog();
         dialog.pack();
+        dialog.setLocationRelativeTo(this); // center the dialog
         dialog.setModal(true);
         dialog.setVisible(true);
 
