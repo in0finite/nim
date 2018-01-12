@@ -5,6 +5,9 @@ import util.Pair;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 
+/**
+ * Computes the move using alpha-beta prunning.
+ */
 public class AlfaBetaPrunningMove extends MinMaxMove {
 
 
@@ -13,6 +16,9 @@ public class AlfaBetaPrunningMove extends MinMaxMove {
     }
 
 
+    /**
+     * Overridden to use alpha-beta search.
+     */
     @Override
     protected void getNextMoveInternal(GameState nimGameState) {
 
@@ -21,6 +27,14 @@ public class AlfaBetaPrunningMove extends MinMaxMove {
     }
 
 
+    /**
+     * Performs alpha-beta search. Results (best node and it's heuristic value) are stored in class' variables.
+     * @param node starting node
+     * @param depthLeft how much depth is left ?
+     * @param α current α
+     * @param β current β
+     * @param maximizingPlayer is this max or min level ?
+     */
     void alphabeta(GameState node, int depthLeft, float α, float β, boolean maximizingPlayer) {
 
         if(minimaxStart(node, depthLeft, maximizingPlayer))

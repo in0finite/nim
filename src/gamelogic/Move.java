@@ -1,5 +1,8 @@
 package gamelogic;
 
+/**
+ * Represents a single move in the game.
+ */
 public class Move {
 
     int pillarIndex = -1;
