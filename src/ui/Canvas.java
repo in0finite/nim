@@ -1,15 +1,15 @@
 package ui;
 
 import gamelogic.Nim;
-import gamelogic.Pillar;
-import org.w3c.dom.css.Rect;
 
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
+/**
+ * Draws game in a canvas and handles input for human player.
+ */
 public class Canvas extends java.awt.Canvas {
 
     MainWindow mainWindow;
@@ -40,6 +40,9 @@ public class Canvas extends java.awt.Canvas {
     }
 
 
+    /**
+     * Called when mouse is clicked. Tries to play a move if human player is current player.
+     */
     void onMouseClicked(MouseEvent mouseEvent) {
 
         // find coin by position
@@ -67,6 +70,9 @@ public class Canvas extends java.awt.Canvas {
     }
 
 
+    /**
+     * Draws coins.
+     */
     @Override
     public void paint(Graphics g) {
 
@@ -86,6 +92,9 @@ public class Canvas extends java.awt.Canvas {
 
     }
 
+    /**
+     * Gets screen position of every coin in the game.
+     */
     public  void   getCoinsPositions( ArrayList<Rectangle> positions ) {
 
         Nim nim = this.mainWindow.getNim();
@@ -106,6 +115,9 @@ public class Canvas extends java.awt.Canvas {
 
     }
 
+    /**
+     * Gets screen rectangle of the given coin.
+     */
     public  void getCoinRectangle(int pillarIndex, int coinIndex, Rectangle rect) {
 
         int canvasHeight = this.getHeight();

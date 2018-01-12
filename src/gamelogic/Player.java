@@ -1,5 +1,8 @@
 package gamelogic;
 
+/**
+ * Participates in a game.
+ */
 public class Player {
 
     String name = "";
@@ -32,7 +35,9 @@ public class Player {
     }
 
 
-    /// Gets name of the currently logged on user.
+    /**
+     * Gets name of the currently logged on user.
+     */
     public static String getCurrentUserName() {
         return System.getProperty("user.name");
     }

@@ -1,4 +1,4 @@
-package gamelogic;
+package util;
 
 import java.util.LinkedList;
 

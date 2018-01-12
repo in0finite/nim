@@ -1,5 +1,8 @@
 package util;
 
+/**
+ * Contains 2 values inside.
+ */
 public class Pair<T1,T2> {
 
     public T1 firstValue;
