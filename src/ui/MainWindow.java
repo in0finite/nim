@@ -16,11 +16,10 @@ public class MainWindow extends JDialog {
     private JPanel gamePanel;
     private JCheckBox pauseAICheckBox;
 
-    private gamelogic.Nim nim;
+    private Nim nim;
     private Canvas canvas;
     private boolean isAIPaused = false;
-    private Timer   timer = null;
-
+    private Timer timer = null;
 
 
     public MainWindow() {
@@ -109,7 +108,7 @@ public class MainWindow extends JDialog {
 
 
     /// Displays message box.
-    void ShowMessage( String title, String text ) {
+    void ShowMessage(String title, String text) {
 
         JOptionPane.showMessageDialog(this, text, title, JOptionPane.INFORMATION_MESSAGE);
 
@@ -121,7 +120,7 @@ public class MainWindow extends JDialog {
 
         // display message box
 
-        this.ShowMessage("Error: " + ex.getClass().getName(), ex.getMessage() );
+        this.ShowMessage("Error: " + ex.getClass().getName(), ex.getMessage());
 
     }
 
@@ -136,10 +135,10 @@ public class MainWindow extends JDialog {
                 Player player = this.nim.getCurrentPlayer();
                 if (player.isAI()) {
 
-                    if(!this.isAIPaused) {
+                    if (!this.isAIPaused) {
 
                         Move move = player.getMoveStrategy().getNextMove(this.nim.getGameState());
-                    //    System.out.println("obtained move from AI: " + move);
+                        //    System.out.println("obtained move from AI: " + move);
                         if (move != null)
                             this.nim.playMove(move);
 
@@ -159,7 +158,7 @@ public class MainWindow extends JDialog {
 
             }
 
-        //    System.out.println("timer tick " + new Date());
+            //    System.out.println("timer tick " + new Date());
 
         } catch (Exception ex) {
             this.HandleException(ex);
@@ -174,16 +173,16 @@ public class MainWindow extends JDialog {
         // check if it is his turn
         // if yes, try to make a move
 
-        if(null == this.nim)
+        if (null == this.nim)
             return;
 
-        if( this.nim.getCurrentPlayer().isAI() )
+        if (this.nim.getCurrentPlayer().isAI())
             return;
 
         // how many coins he wants to remove ?
-        int numCoinsToRemove = this.nim.getGameState().getNumCoinsAtPillar(pillarIndex) - coinIndex ;
+        int numCoinsToRemove = this.nim.getGameState().getNumCoinsAtPillar(pillarIndex) - coinIndex;
 
-        if(!this.nim.getGameState().isMovePossible(pillarIndex, numCoinsToRemove)) {
+        if (!this.nim.getGameState().isMovePossible(pillarIndex, numCoinsToRemove)) {
             // display message
             this.ShowMessage("", "Invalid move");
             return;
@@ -193,7 +192,7 @@ public class MainWindow extends JDialog {
 
         this.UpdateUI();
 
-        if(this.nim.isGameOver()) {
+        if (this.nim.isGameOver()) {
             this.OnGameOver();
         }
 
@@ -201,19 +200,19 @@ public class MainWindow extends JDialog {
 
     void OnGameOver() {
 
-        if(null == this.nim)
+        if (null == this.nim)
             return;
-        if(!this.nim.isGameOver())
+        if (!this.nim.isGameOver())
             return;
 
         // if only 1 player is human, display something like: you won / you lost
         // otherwise just display winner name
 
-        if( (this.nim.getPlayer1().isAI() && !this.nim.getPlayer2().isAI())
+        if ((this.nim.getPlayer1().isAI() && !this.nim.getPlayer2().isAI())
                 || (this.nim.getPlayer2().isAI() && !this.nim.getPlayer1().isAI())
                 ) {
             // only 1 player is human
-            this.ShowMessage("GAME OVER", this.nim.getWinningPlayer().isAI() ? "you lost" : "you won" );
+            this.ShowMessage("GAME OVER", this.nim.getWinningPlayer().isAI() ? "you lost" : "you won");
         } else {
             this.ShowMessage("GAME OVER", "winner is " + this.nim.getWinningPlayer().getName());
         }
@@ -232,11 +231,11 @@ public class MainWindow extends JDialog {
 
     public static MoveStrategy getMoveStrategyFromEnum(SettingsDialog.AIStrategy aiStrategy, int maxTreeDepth) {
 
-        if(aiStrategy == SettingsDialog.AIStrategy.Minmax)
+        if (aiStrategy == SettingsDialog.AIStrategy.Minmax)
             return new MinMaxMove(maxTreeDepth);
-        else if(aiStrategy == SettingsDialog.AIStrategy.AlphaBetaPrunning)
+        else if (aiStrategy == SettingsDialog.AIStrategy.AlphaBetaPrunning)
             return new AlfaBetaPrunningMove(maxTreeDepth);
-        else if(aiStrategy == SettingsDialog.AIStrategy.Competitive)
+        else if (aiStrategy == SettingsDialog.AIStrategy.Competitive)
             return new CompetitiveMove(maxTreeDepth);
 
         throw new IllegalArgumentException("no such AI strategy available");
@@ -251,17 +250,17 @@ public class MainWindow extends JDialog {
         try {
 
             SettingsDialog dialog = this.OpenSettingsDialog();
-            if(dialog.getResult() == SettingsDialog.Result.OK) {
+            if (dialog.getResult() == SettingsDialog.Result.OK) {
                 // read params
                 SettingsDialog.Params params = dialog.getParams();
 
                 // check if params are valid
-                if(params.numPillars > 10)
+                if (params.numPillars > 10)
                     throw new IllegalArgumentException("number of pillars can not be higher than 10");
-                int[] inputIntegers = new int[] { params.numPillars, params.timerInterval, params.maxTreeDepth1,
-                    params.maxTreeDepth2 };
-                for(int inputInteger : inputIntegers) {
-                    if(inputInteger <= 0)
+                int[] inputIntegers = new int[]{params.numPillars, params.timerInterval, params.maxTreeDepth1,
+                        params.maxTreeDepth2};
+                for (int inputInteger : inputIntegers) {
+                    if (inputInteger <= 0)
                         throw new IllegalArgumentException("invalid input");
                 }
 
@@ -289,10 +288,10 @@ public class MainWindow extends JDialog {
                 }
 
                 // assign move strategies for AI players
-                if(player1.isAI()) {
+                if (player1.isAI()) {
                     player1.setMoveStrategy(getMoveStrategyFromEnum(params.aiStrategy1, params.maxTreeDepth1));
                 }
-                if(player2.isAI()) {
+                if (player2.isAI()) {
                     player2.setMoveStrategy(getMoveStrategyFromEnum(params.aiStrategy2, params.maxTreeDepth2));
                 }
 
@@ -322,7 +321,7 @@ public class MainWindow extends JDialog {
 
     void OnPauseAICheckBoxAction() {
 
-        this.isAIPaused = this.pauseAICheckBox.isSelected() ;
+        this.isAIPaused = this.pauseAICheckBox.isSelected();
 
     }
 
@@ -337,7 +336,7 @@ public class MainWindow extends JDialog {
 
         String str = "";
 
-        if(this.nim != null) {
+        if (this.nim != null) {
 
             // use html so we can display new line
             str += "<html>";
@@ -369,4 +368,72 @@ public class MainWindow extends JDialog {
 
     }
 
+    {
+// GUI initializer generated by IntelliJ IDEA GUI Designer
+// >>> IMPORTANT!! <<<
+// DO NOT EDIT OR ADD ANY CODE HERE!
+        $$$setupUI$$$();
+    }
+
+    /**
+     * Method generated by IntelliJ IDEA GUI Designer
+     * >>> IMPORTANT!! <<<
+     * DO NOT edit this method OR call it in your code!
+     *
+     * @noinspection ALL
+     */
+    private void $$$setupUI$$$() {
+        contentPane = new JPanel();
+        contentPane.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(2, 1, new Insets(10, 10, 10, 10), -1, -1));
+        contentPane.setPreferredSize(new Dimension(800, 480));
+        gamePanel = new JPanel();
+        gamePanel.setLayout(new BorderLayout(0, 0));
+        contentPane.add(gamePanel, new com.intellij.uiDesigner.core.GridConstraints(1, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        statusLabel = new JLabel();
+        Font statusLabelFont = this.$$$getFont$$$(null, Font.BOLD, -1, statusLabel.getFont());
+        if (statusLabelFont != null) statusLabel.setFont(statusLabelFont);
+        statusLabel.setForeground(new Color(-15328536));
+        statusLabel.setHorizontalAlignment(2);
+        statusLabel.setHorizontalTextPosition(2);
+        statusLabel.setText("<html>Please start a <br> new game</html>");
+        gamePanel.add(statusLabel, BorderLayout.NORTH);
+        final JToolBar toolBar1 = new JToolBar();
+        toolBar1.setFloatable(false);
+        contentPane.add(toolBar1, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(-1, 20), null, 0, false));
+        newGameButton = new JButton();
+        newGameButton.setText("New game");
+        toolBar1.add(newGameButton);
+        pauseAICheckBox = new JCheckBox();
+        pauseAICheckBox.setText("pause AI");
+        toolBar1.add(pauseAICheckBox);
+        aboutButton = new JButton();
+        aboutButton.setText("About");
+        toolBar1.add(aboutButton);
+    }
+
+    /**
+     * @noinspection ALL
+     */
+    private Font $$$getFont$$$(String fontName, int style, int size, Font currentFont) {
+        if (currentFont == null) return null;
+        String resultName;
+        if (fontName == null) {
+            resultName = currentFont.getName();
+        } else {
+            Font testFont = new Font(fontName, Font.PLAIN, 10);
+            if (testFont.canDisplay('a') && testFont.canDisplay('1')) {
+                resultName = fontName;
+            } else {
+                resultName = currentFont.getName();
+            }
+        }
+        return new Font(resultName, style >= 0 ? style : currentFont.getStyle(), size >= 0 ? size : currentFont.getSize());
+    }
+
+    /**
+     * @noinspection ALL
+     */
+    public JComponent $$$getRootComponent$$$() {
+        return contentPane;
+    }
 }
