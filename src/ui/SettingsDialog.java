@@ -5,6 +5,9 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.Scanner;
 
+/**
+ * Dialog which contains settings for the game.
+ */
 public class SettingsDialog extends JDialog {
     private JPanel contentPane;
     private JButton buttonOK;
@@ -142,6 +145,9 @@ public class SettingsDialog extends JDialog {
     }
 
 
+    /**
+     * How the dialog was closed ?
+     */
     public enum Result {
         OK,
         Cancel
@@ -150,6 +156,9 @@ public class SettingsDialog extends JDialog {
     private Result result = Result.Cancel;
 
 
+    /**
+     * Ctor. Initializes dialog.
+     */
     public SettingsDialog() {
         setContentPane(contentPane);
         setModal(true);
@@ -183,11 +192,17 @@ public class SettingsDialog extends JDialog {
         }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
     }
 
+    /**
+     * Called when OK is pressed.
+     */
     private void onOK() {
         this.result = Result.OK;
         dispose();
     }
 
+    /**
+     * Called when cancel is pressed, or when dialog is closed.
+     */
     private void onCancel() {
         this.result = Result.Cancel;
         dispose();
@@ -207,18 +222,28 @@ public class SettingsDialog extends JDialog {
 
 
     // TODO: add AI vs human
+
+    /**
+     * Who will play the game ?
+     */
     public enum PlayersType {
         HumanVsAI,
         HumanVsHuman,
         AIVsAI
     }
 
+    /**
+     * Type of AI.
+     */
     public enum AIStrategy {
         Minmax,
         AlphaBetaPrunning,
         Competitive
     }
 
+    /**
+     * All the parameters that can be edited in settings dialog.
+     */
     public class Params {
         public int playersType = 0;
         public int numPillars = 0;
@@ -231,7 +256,9 @@ public class SettingsDialog extends JDialog {
     }
 
 
-    /// Read parameters from UI controls.
+    /**
+     * Read parameters from UI controls.
+     */
     public Params getParams() {
 
         Params params = new Params();
@@ -253,6 +280,9 @@ public class SettingsDialog extends JDialog {
         return params;
     }
 
+    /**
+     * Read integer from text field.
+     */
     public static int readIntFromTextField(JTextField textField) {
 
         try (Scanner scanner = new Scanner(textField.getText())) {
