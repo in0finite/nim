@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
 
+/**
+ * Class which contains game state.
+ */
 public class GameState {
 
     private int[] m_pillars = null;
@@ -19,6 +22,9 @@ public class GameState {
 
     }
 
+    /**
+     * Constructs game state from collection of integers representing number of coins per pillar.
+     */
     public GameState( Iterable<Integer> coinsPerPillar ) {
 
         ArrayList<Integer> list = new ArrayList<>(4);
@@ -33,6 +39,9 @@ public class GameState {
 
     }
 
+    /**
+     * Constructs game state from other game state.
+     */
     public GameState(GameState other) {
 
         //this.m_pillars = new ArrayList<>(other.getNumPillars());
@@ -64,6 +73,9 @@ public class GameState {
     }
 
 
+    /**
+     * Copies coins to destination.
+     */
     public void copyPillarsData( GameState destination ) {
         //destination.m_pillars.clear();
         //destination.m_pillars.ensureCapacity(this.getNumPillars());
@@ -102,6 +114,9 @@ public class GameState {
     }
 
 
+    /**
+     * Get number of pillars which have coins.
+     */
     public  int getNumPillarsWithCoins() {
 
         int count = 0;
@@ -114,12 +129,18 @@ public class GameState {
     }
 
 
+    /**
+     * Checks if the specified move is possible (that it doesn't violate game's rules).
+     */
     public  boolean isMovePossible(Move move) {
 
         return this.isMovePossible(move.pillarIndex, move.numCoinsTaken);
 
     }
 
+    /**
+     * Checks if the specified move is possible (that it doesn't violate game's rules).
+     */
     public  boolean isMovePossible(int pillarIndexToRemoveFrom, int numCoinsToRemove) {
 
 
@@ -155,6 +176,9 @@ public class GameState {
         return true;
     }
 
+    /**
+     * Computes all possible new states.
+     */
     public void getAllPossibleNewStates(ArrayDeque<GameState> queue) {
 
         GameState currentState = this;
@@ -189,6 +213,9 @@ public class GameState {
         //return queue;
     }
 
+    /**
+     * Get number of moves that can be played in this state.
+     */
     public int getNumPossibleMoves() {
         ArrayDeque<GameState> queue = new ArrayDeque<>(16);
         this.getAllPossibleNewStates(queue);
@@ -196,6 +223,9 @@ public class GameState {
     }
 
 
+    /**
+     * Computes the move that was played in order to get from firstState to secondState.
+     */
     public static Move getMoveBetweenTwoStates(GameState firstState, GameState secondState) {
 
         for (int j = 0; j < secondState.getNumPillars(); j++) {
