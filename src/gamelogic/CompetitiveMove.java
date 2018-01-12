@@ -9,17 +9,6 @@ import java.util.HashMap;
  */
 public class CompetitiveMove extends AlfaBetaPrunningMove {
 
-
-    /**
-     * Thrown when victory condition is found. It signals that the search should be stopped.
-     * Extends RuntimeException in order to be unchecked.
-     */
-    public class VictoryException extends RuntimeException {
-        public GameState currentNode;
-        public GameState lastNode;
-    }
-
-
     private HashMap<GameState, Pair<Float, Integer>> m_visitedStates = new HashMap<GameState, Pair<Float, Integer>>(4 * 1024 * 1024);
     private int m_numStatesEliminated = 0;
 
@@ -31,23 +20,25 @@ public class CompetitiveMove extends AlfaBetaPrunningMove {
     }
 
 
+    /**
+     * Setups some stuff before searching for move.
+     */
     @Override
     protected void getNextMoveInternal(GameState nimGameState) {
 
         m_visitedStates.clear();
         m_numStatesEliminated = 0;
 
-        try {
-            super.getNextMoveInternal(nimGameState);
-        } catch (VictoryException victoryEx) {
-            m_resultNode = victoryEx.lastNode;
-            m_resultHeuristicValue = Float.MAX_VALUE;   // has to be done, because the value could be min float
-        }
+        super.getNextMoveInternal(nimGameState);
 
         System.out.println("eliminated " + m_numStatesEliminated + " already visited states, hashmap size " + m_visitedStates.size());
 
     }
 
+    /**
+     * Before performing alphabeta search on the specified node, it checks if the node was already visited
+     * at this depth, and if it is, skips search and returns values from old search.
+     */
     @Override
     void alphabeta(GameState node, int depthLeft, float α, float β, boolean maximizingPlayer) {
 
@@ -72,26 +63,7 @@ public class CompetitiveMove extends AlfaBetaPrunningMove {
         }
 
         // let parent class do the work
-//        try {
-            super.alphabeta(node, depthLeft, α, β, maximizingPlayer);
-
-//        } catch (VictoryException victoryEx) {
-//            // reassign node
-//            victoryEx.lastNode = victoryEx.currentNode;
-//            victoryEx.currentNode = node;
-//            throw victoryEx;
-//        }
-
-        // if victory is found, abort search
-//        if( (maximizingPlayer && m_resultHeuristicValue == Float.MAX_VALUE) || (!maximizingPlayer && m_resultHeuristicValue == Float.MIN_VALUE) )
-//        {
-//            System.out.println("Found victory move, value = " + m_resultHeuristicValue + ", depth = " + (this.maxDepth - depthLeft));
-//            //m_resultNode = node;    // we need to assign this, because maybe there isn't anyone to catch exception
-//            VictoryException victoryException = new VictoryException();
-//            victoryException.lastNode = m_resultNode;
-//            victoryException.currentNode = node;
-//            throw victoryException;
-//        }
+        super.alphabeta(node, depthLeft, α, β, maximizingPlayer);
 
         // remember this state
         if(maximizingPlayer) {
