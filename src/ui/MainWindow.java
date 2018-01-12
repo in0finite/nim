@@ -8,6 +8,10 @@ import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.Date;
 
+/**
+ * The main class in the program. It creates main window, and has all the responsibilities for starting new game,
+ * interacting with the human players and AI, playing moves, etc.
+ */
 public class MainWindow extends JDialog {
     private JPanel contentPane;
     private JButton newGameButton;
@@ -22,6 +26,9 @@ public class MainWindow extends JDialog {
     private Timer timer = null;
 
 
+    /**
+     * Ctor. It setups the GUI.
+     */
     public MainWindow() {
         setContentPane(contentPane);
         setModal(true);
@@ -68,6 +75,9 @@ public class MainWindow extends JDialog {
 
     }
 
+    /**
+     * Called after ctor. Creates the canvas, starts the timer, and updates UI.
+     */
     private void OnAfterCtor() {
 
         // create canvas
@@ -84,15 +94,6 @@ public class MainWindow extends JDialog {
 
     }
 
-    private void onOK() {
-        // add your code here
-        dispose();
-    }
-
-    private void onCancel() {
-        // add your code here if necessary
-        dispose();
-    }
 
     public static void main(String[] args) {
         MainWindow dialog = new MainWindow();
@@ -107,13 +108,18 @@ public class MainWindow extends JDialog {
     }
 
 
-    /// Displays message box.
+    /**
+     * Displays message box.
+     */
     void ShowMessage(String title, String text) {
 
         JOptionPane.showMessageDialog(this, text, title, JOptionPane.INFORMATION_MESSAGE);
 
     }
 
+    /**
+     * Prints exception to stdout, and displays a message box about it.
+     */
     void HandleException(Exception ex) {
 
         ex.printStackTrace();
@@ -124,6 +130,9 @@ public class MainWindow extends JDialog {
 
     }
 
+    /**
+     * Called periodically by timer. If AI player is on the move, it obtains a move from AI, and plays it.
+     */
     void OnTimerAction() {
 
         try {
@@ -166,6 +175,11 @@ public class MainWindow extends JDialog {
 
     }
 
+    /**
+     * Called when mouse has clicked on a coin. If the current player is human player, it tries to play a move.
+     * @param pillarIndex pillar index where mouse has clicked
+     * @param coinIndex index of coin on specified pillar
+     */
     void onClickOnCoin(int pillarIndex, int coinIndex) {
 
         // human player trying to make a move
@@ -198,6 +212,9 @@ public class MainWindow extends JDialog {
 
     }
 
+    /**
+     * Called when game is over. Displays message box to inform player.
+     */
     void OnGameOver() {
 
         if (null == this.nim)
@@ -219,6 +236,9 @@ public class MainWindow extends JDialog {
 
     }
 
+    /**
+     * Opens the settings/new game dialog.
+     */
     SettingsDialog OpenSettingsDialog() {
 
         SettingsDialog dialog = new SettingsDialog();
@@ -229,6 +249,10 @@ public class MainWindow extends JDialog {
         return dialog;
     }
 
+    /**
+     * Creates MoveStrategy based on enumeration from UI.
+     * @param aiStrategy enumeration from UI
+     */
     public static MoveStrategy getMoveStrategyFromEnum(SettingsDialog.AIStrategy aiStrategy, int maxTreeDepth) {
 
         if (aiStrategy == SettingsDialog.AIStrategy.Minmax)
@@ -241,6 +265,9 @@ public class MainWindow extends JDialog {
         throw new IllegalArgumentException("no such AI strategy available");
     }
 
+    /**
+     * Starts new game. Opens a new game dialog, and if OK was pressed, parses all parameters, and creates a new game.
+     */
     void StartNewGame() {
 
         // open settings dialog
@@ -311,6 +338,9 @@ public class MainWindow extends JDialog {
 
     }
 
+    /**
+     * Called when new game is started.
+     */
     void OnNewGameStarted() {
 
         System.out.println("New game started");
@@ -319,12 +349,18 @@ public class MainWindow extends JDialog {
 
     }
 
+    /**
+     * Called when checkbox for pausing AI is changed.
+     */
     void OnPauseAICheckBoxAction() {
 
         this.isAIPaused = this.pauseAICheckBox.isSelected();
 
     }
 
+    /**
+     * Updates status label and canvas.
+     */
     void UpdateUI() {
 
         this.UpdateStatusLabel();
@@ -332,6 +368,9 @@ public class MainWindow extends JDialog {
 
     }
 
+    /**
+     * Updates text for status label.
+     */
     void UpdateStatusLabel() {
 
         String str = "";
@@ -352,12 +391,18 @@ public class MainWindow extends JDialog {
 
     }
 
+    /**
+     * Repaints the canvas.
+     */
     void UpdateCanvas() {
 
         this.canvas.repaint();
 
     }
 
+    /**
+     * Opens about dialog which shows information about this program.
+     */
     void OpenAboutDialog() {
 
         String str = "Nim\n\nminmax tree game\n\nbuilt by in0finite => github.com/in0finite" +
