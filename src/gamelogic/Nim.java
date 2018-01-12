@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 
+/**
+ * Nim game. Handles all stuff related to game: game state, players, turns, game over, etc.
+ */
 public class Nim {
 
 
@@ -21,6 +24,9 @@ public class Nim {
     Player  m_player2 = null;
 
 
+    /**
+     * Starts a new game using the specified number of coins per pillar, and specified players.
+     */
     public  Nim(Iterable<Integer> coinsPerPillar, Player player1, Player player2) throws Exception {
 
         if(!IsValidState(coinsPerPillar)) {
@@ -62,6 +68,9 @@ public class Nim {
     }
 
 
+    /**
+     * Determines if the specified numbers of coins per pillar represent a valid game state.
+     */
     public  static  boolean IsValidState(Iterable<Integer> coinsPerPillar ) {
 
         HashSet<Integer> foundNumbers = new HashSet<Integer>();
@@ -78,6 +87,9 @@ public class Nim {
     }
 
 
+    /**
+     * Get the player who should play the next move.
+     */
     public Player   getCurrentPlayer() {
 
         if(0 == m_currentPlayer)
@@ -87,6 +99,10 @@ public class Nim {
     }
 
 
+    /**
+     * Play the specified move as the current player.
+     * @return false if it is game over, or if the move is not valid, otherwise true
+     */
     public boolean  playMove(Move move) {
 
         if(m_isGameOver)
@@ -120,19 +136,6 @@ public class Nim {
 
         return true;
     }
-
-    /// Plays the next move using the current player.
-//    public  boolean playNextMove() {
-//
-//        Player player = this.getCurrentPlayer();
-//
-//        // obtain next move from the player
-//        Move move = player.getNextMove(this);
-//
-//        return this.playMove(move);
-//
-//    }
-
 
 
 }
