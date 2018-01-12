@@ -121,7 +121,7 @@ public class Canvas extends java.awt.Canvas {
     public  void getCoinRectangle(int pillarIndex, int coinIndex, Rectangle rect) {
 
         int canvasHeight = this.getHeight();
-        int yOffset = coinHeight / 2 + 5;
+        int yOffset = coinHeight / 2 + 30;
 
 
         int xPos = pillarIndex * coinWidth + pillarIndex * hgap ;

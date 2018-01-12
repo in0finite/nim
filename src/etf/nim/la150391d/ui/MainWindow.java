@@ -176,8 +176,9 @@ public class MainWindow extends JDialog {
 
     /**
      * Called when mouse has clicked on a coin. If the current player is human player, it tries to play a move.
+     *
      * @param pillarIndex pillar index where mouse has clicked
-     * @param coinIndex index of coin on specified pillar
+     * @param coinIndex   index of coin on specified pillar
      */
     void onClickOnCoin(int pillarIndex, int coinIndex) {
 
@@ -251,6 +252,7 @@ public class MainWindow extends JDialog {
 
     /**
      * Creates MoveStrategy based on enumeration from UI.
+     *
      * @param aiStrategy enumeration from UI
      */
     public static MoveStrategy getMoveStrategyFromEnum(SettingsDialog.AIStrategy aiStrategy, int maxTreeDepth) {
@@ -378,9 +380,21 @@ public class MainWindow extends JDialog {
         if (this.nim != null) {
 
             // use html so we can display new line
+            // text must have fixed height, or else canvas position will change
             str += "<html>";
             str += this.nim.getPlayer1().getName() + "&nbsp;&nbsp;&nbsp;VS&nbsp;&nbsp;&nbsp;" + this.nim.getPlayer2().getName();
-            str += "<br><br>" + "Current turn: " + this.nim.getCurrentPlayer().getName();
+            str += "<br><br>";
+            if (this.nim.isGameOver()) {
+                str += "Game over - winner is " + this.nim.getWinningPlayer().getName();
+                str += "<br><br><br>";
+            } else {
+                str += "Current turn: " + this.nim.getCurrentPlayer().getName();
+                str += "<br><br>";
+                GameState gameState = this.nim.getGameState();
+                if (gameState.numCoinsRemovedLastTurn != 0)
+                    str += "num coins in last turn: " + gameState.numCoinsRemovedLastTurn;
+                str += "<br>";
+            }
             str += "</html>";
 
         } else {
