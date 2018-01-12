@@ -7,6 +7,9 @@ import java.util.ArrayList;
 import java.util.Deque;
 import java.util.Queue;
 
+/**
+ * Finds the next move by using minmax tree.
+ */
 public class MinMaxMove implements MoveStrategy {
 
     protected int maxDepth = 0;
@@ -18,17 +21,14 @@ public class MinMaxMove implements MoveStrategy {
 
 
 
-    public class NodeData {
-        ArrayList<Pillar> pillars = new ArrayList<>();
-    }
-
-
-
     public MinMaxMove(int maxDepth) {
         this.maxDepth = maxDepth;
     }
 
 
+    /**
+     * Computes the next move, and prints some info about it.
+     */
     @Override
     public Move getNextMove(GameState nimGameState) {
 
@@ -57,6 +57,10 @@ public class MinMaxMove implements MoveStrategy {
         return move;
     }
 
+    /**
+     * Function which does the job (finds the next move). It is meant to be overriden by inherited classes,
+     * so that they would retain logging functionality of getNextMove().
+     */
     protected void getNextMoveInternal(GameState nimGameState) {
 
         minimax(nimGameState, this.maxDepth, true);
@@ -64,6 +68,12 @@ public class MinMaxMove implements MoveStrategy {
     }
 
 
+    /**
+     * Computes the heuristic value of a node.
+     * @param depthLeft how much depth is left ?
+     * @param hasChildren does this node has any children ?
+     * @param maximizingPlayer is this max or min level ?
+     */
     public float heuristicValue(GameState node, int depthLeft, boolean hasChildren, boolean maximizingPlayer) {
 
         if(node.getNumPillars() < 1)
@@ -94,7 +104,12 @@ public class MinMaxMove implements MoveStrategy {
     }
 
 
-    /// Performs minimax search. Returns pair of best node and it's heuristic value.
+    /**
+     * Performs minimax search. Results (best node and it's heuristic value) are stored in class' variables.
+     * @param node starting node
+     * @param depthLeft how much depth is left ?
+     * @param maximizingPlayer is this max or min level ?
+     */
     void minimax(GameState node, int depthLeft, boolean maximizingPlayer) {
 
         if(minimaxStart(node, depthLeft, maximizingPlayer))
@@ -128,6 +143,10 @@ public class MinMaxMove implements MoveStrategy {
     }
 
 
+    /**
+     * Performs some work on the node before it is processed.
+     * @return true if the node should not be processed any further, otherwise false
+     */
     protected final boolean minimaxStart( GameState node, int depthLeft, boolean maximizingPlayer ) {
 
         this.numCalls++;
@@ -151,6 +170,9 @@ public class MinMaxMove implements MoveStrategy {
     }
 
 
+    /**
+     * Removes last element from queue multiple times.
+     */
     public static void dequeueMultiple( ArrayDeque<GameState> queue, int numTimesToDequeue ) {
         for (int i = 0; i < numTimesToDequeue; i++) {
             queue.removeLast();
